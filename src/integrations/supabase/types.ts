@@ -187,7 +187,6 @@ export type Database = {
         }
       }
       get_user_business_id: { Args: never; Returns: string }
-      get_user_role: { Args: never; Returns: string }
       log_audit_event: {
         Args: {
           p_action: string
