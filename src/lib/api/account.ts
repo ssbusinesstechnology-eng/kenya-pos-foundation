@@ -13,9 +13,9 @@ export const accountKeys = {
 
 /** Creates the caller's profile row if it doesn't exist yet. */
 export async function ensureProfile(fullName?: string | null): Promise<Profile> {
-  const { data, error } = await supabase.rpc("ensure_profile", {
-    p_full_name: fullName ?? undefined,
-  });
+  const args: { p_full_name?: string } = {};
+  if (fullName) args.p_full_name = fullName;
+  const { data, error } = await supabase.rpc("ensure_profile", args);
   if (error) throw new Error(friendlyDataError(error));
   return data as unknown as Profile;
 }
@@ -51,14 +51,23 @@ export async function fetchAccount(): Promise<Account | null> {
 }
 
 export async function createBusinessForOwner(input: BusinessSetupInput): Promise<Business> {
-  const { data, error } = await supabase.rpc("create_business_for_owner", {
+  const args: {
+    p_name: string;
+    p_owner_full_name: string;
+    p_currency: string;
+    p_contact_phone?: string;
+    p_contact_email?: string;
+    p_address?: string;
+  } = {
     p_name: input.name,
     p_owner_full_name: input.ownerFullName,
-    p_contact_phone: input.phone ?? undefined,
-    p_contact_email: input.email ?? undefined,
-    p_address: input.address ?? undefined,
     p_currency: input.currency,
-  });
+  };
+  if (input.phone) args.p_contact_phone = input.phone;
+  if (input.email) args.p_contact_email = input.email;
+  if (input.address) args.p_address = input.address;
+
+  const { data, error } = await supabase.rpc("create_business_for_owner", args);
   if (error) throw new Error(friendlyDataError(error));
   return data as unknown as Business;
 }
@@ -72,13 +81,17 @@ export async function logAuditEvent(
   } = {},
 ): Promise<void> {
   // Audit logging must never block a user flow.
-  const { error } = await supabase.rpc("log_audit_event", {
-    p_action: action,
-    p_entity_type: options.entityType ?? undefined,
-    p_entity_id: options.entityId ?? undefined,
-    p_metadata: (options.metadata ?? {}) as never,
-    p_business_id: undefined,
-  });
+  const args: {
+    p_action: string;
+    p_entity_type?: string;
+    p_entity_id?: string;
+    p_metadata?: never;
+  } = { p_action: action };
+  if (options.entityType) args.p_entity_type = options.entityType;
+  if (options.entityId) args.p_entity_id = options.entityId;
+  if (options.metadata) args.p_metadata = options.metadata as never;
+
+  const { error } = await supabase.rpc("log_audit_event", args);
   if (error) console.warn("audit log skipped", action);
 }
 
