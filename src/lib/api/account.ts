@@ -14,7 +14,7 @@ export const accountKeys = {
 /** Creates the caller's profile row if it doesn't exist yet. */
 export async function ensureProfile(fullName?: string | null): Promise<Profile> {
   const { data, error } = await supabase.rpc("ensure_profile", {
-    p_full_name: fullName ?? null,
+    p_full_name: fullName ?? undefined,
   });
   if (error) throw new Error(friendlyDataError(error));
   return data as unknown as Profile;
@@ -54,9 +54,9 @@ export async function createBusinessForOwner(input: BusinessSetupInput): Promise
   const { data, error } = await supabase.rpc("create_business_for_owner", {
     p_name: input.name,
     p_owner_full_name: input.ownerFullName,
-    p_contact_phone: input.phone ?? null,
-    p_contact_email: input.email ?? null,
-    p_address: input.address ?? null,
+    p_contact_phone: input.phone ?? undefined,
+    p_contact_email: input.email ?? undefined,
+    p_address: input.address ?? undefined,
     p_currency: input.currency,
   });
   if (error) throw new Error(friendlyDataError(error));
@@ -74,10 +74,10 @@ export async function logAuditEvent(
   // Audit logging must never block a user flow.
   const { error } = await supabase.rpc("log_audit_event", {
     p_action: action,
-    p_entity_type: options.entityType ?? null,
-    p_entity_id: options.entityId ?? null,
+    p_entity_type: options.entityType ?? undefined,
+    p_entity_id: options.entityId ?? undefined,
     p_metadata: (options.metadata ?? {}) as never,
-    p_business_id: null,
+    p_business_id: undefined,
   });
   if (error) console.warn("audit log skipped", action);
 }
