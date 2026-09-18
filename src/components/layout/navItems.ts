@@ -5,6 +5,7 @@ import {
   Package,
   Receipt,
   Settings,
+  Sparkles,
   Users,
   UserSquare2,
 } from "lucide-react";
@@ -23,5 +24,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Customers", to: "/customers", icon: UserSquare2 },
   { label: "Reports", to: "/reports", icon: BarChart3 },
   { label: "Users", to: "/users", icon: Users },
+  { label: "Ask S&S", to: "/assistant", icon: Sparkles },
   { label: "Settings", to: "/settings", icon: Settings },
 ];

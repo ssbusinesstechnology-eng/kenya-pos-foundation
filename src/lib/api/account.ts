@@ -5,7 +5,13 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import { friendlyAuthError, friendlyDataError } from "@/lib/errors";
-import type { Account, Business, BusinessSetupInput, Profile } from "./types";
+import type {
+  Account,
+  Business,
+  BusinessSettingsInput,
+  BusinessSetupInput,
+  Profile,
+} from "./types";
 
 export const accountKeys = {
   current: ["account", "current"] as const,
@@ -70,6 +76,28 @@ export async function createBusinessForOwner(input: BusinessSetupInput): Promise
   const { data, error } = await supabase.rpc("create_business_for_owner", args);
   if (error) throw new Error(friendlyDataError(error));
   return data as unknown as Business;
+}
+
+/**
+ * Updates the caller's own business. RLS (owner-only update policy) is what
+ * actually guarantees a business can never touch another tenant's row.
+ */
+export async function updateBusiness(
+  businessId: string,
+  input: BusinessSettingsInput,
+): Promise<Business> {
+  const { data, error } = await supabase
+    .from("businesses")
+    .update(input)
+    .eq("id", businessId)
+    .select("*")
+    .maybeSingle();
+  if (error) throw new Error(friendlyDataError(error));
+  if (!data) {
+    throw new Error("We couldn't save those changes. Only the business owner can edit them.");
+  }
+  await logAuditEvent("business.updated", { entityType: "business", entityId: businessId });
+  return data as Business;
 }
 
 export async function logAuditEvent(
