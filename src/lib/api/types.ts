@@ -38,6 +38,16 @@ export interface BusinessSetupInput {
   currency: string;
 }
 
+export interface BusinessSettingsInput {
+  name: string;
+  contact_phone: string | null;
+  contact_email: string | null;
+  address: string | null;
+  currency: string;
+  receipt_footer: string | null;
+  default_low_stock_threshold: number;
+}
+
 export const ROLE_LABELS: Record<UserRole, string> = {
   owner: "Owner",
   manager: "Manager",

@@ -41,9 +41,9 @@ export function ErrorState({
   message,
   onRetry,
 }: {
-  title?: string;
-  message?: string;
-  onRetry?: () => void;
+  title?: string | undefined;
+  message?: string | undefined;
+  onRetry?: (() => void) | undefined;
 }) {
   return (
     <div className="surface-panel flex flex-col items-center justify-center gap-3 px-6 py-14 text-center">
