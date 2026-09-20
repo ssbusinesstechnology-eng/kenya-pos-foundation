@@ -62,7 +62,7 @@ export function AppShell({ account, children }: { account: Account; children: Re
             onClick={() => setMobileOpen((open) => !open)}
             className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
-            {mobileOpen ? <Menu className="size-5" /> : <Menu className="size-5" />}
+            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
         </header>
 
