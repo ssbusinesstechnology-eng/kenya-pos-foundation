@@ -6,6 +6,7 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { ForgotPasswordForm, LoginForm, RegisterForm } from "@/components/auth/AuthForms";
 
 export const Route = createFileRoute("/auth")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Sign in · S&S POS" },
