@@ -101,6 +101,65 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          business_id: string
+          category: string | null
+          cost_price: number
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          low_stock_threshold: number
+          name: string
+          selling_price: number
+          sku: string | null
+          stock_quantity: number
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          business_id?: string
+          category?: string | null
+          cost_price?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          name: string
+          selling_price?: number
+          sku?: string | null
+          stock_quantity?: number
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          category?: string | null
+          cost_price?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          name?: string
+          selling_price?: number
+          sku?: string | null
+          stock_quantity?: number
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           business_id: string | null
