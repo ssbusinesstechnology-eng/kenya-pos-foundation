@@ -48,6 +48,49 @@ export interface BusinessSettingsInput {
   default_low_stock_threshold: number;
 }
 
+export interface Product {
+  id: string;
+  business_id: string;
+  name: string;
+  sku: string | null;
+  category: string | null;
+  description: string | null;
+  cost_price: number;
+  selling_price: number;
+  stock_quantity: number;
+  low_stock_threshold: number;
+  unit: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductInput {
+  name: string;
+  sku: string;
+  category: string | null;
+  description: string | null;
+  cost_price: number;
+  selling_price: number;
+  stock_quantity: number;
+  low_stock_threshold: number;
+  unit: string;
+  is_active: boolean;
+}
+
+export const PRODUCT_UNITS = [
+  "pc",
+  "kg",
+  "g",
+  "litre",
+  "ml",
+  "pack",
+  "box",
+  "crate",
+  "dozen",
+  "metre",
+] as const;
+
 export const ROLE_LABELS: Record<UserRole, string> = {
   owner: "Owner",
   manager: "Manager",
