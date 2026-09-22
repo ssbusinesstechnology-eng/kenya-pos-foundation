@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Package, Pencil, Plus, Power, Search } from "lucide-react";
+import { History, Package, Pencil, Plus, Power, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common/StateViews";
 import { ProductFormDialog } from "@/components/products/ProductFormDialog";
+import { ProductHistoryDialog } from "@/components/inventory/ProductHistoryDialog";
 import { useAccount } from "@/lib/api/useAccount";
 import {
   createProduct,
@@ -69,6 +70,8 @@ function ProductsPage() {
   const [status, setStatus] = useState<StatusFilter>("active");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Product | undefined>(undefined);
+  const [historyProduct, setHistoryProduct] = useState<Product | undefined>(undefined);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const rows = products.data ?? [];
 
@@ -227,7 +230,7 @@ function ProductsPage() {
                 <TableHead className="text-right">Cost price</TableHead>
                 <TableHead className="text-right">Stock</TableHead>
                 <TableHead>Status</TableHead>
-                {canManage ? <TableHead className="text-right">Actions</TableHead> : null}
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -254,9 +257,9 @@ function ProductsPage() {
                         {product.is_active ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>
-                    {canManage ? (
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                    <TableCell className="text-right">
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {canManage ? (
                           <Button
                             variant="outline"
                             size="sm"
@@ -266,6 +269,20 @@ function ProductsPage() {
                             <Pencil className="size-3.5" aria-hidden />
                             Edit
                           </Button>
+                        ) : null}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setHistoryProduct(product);
+                            setHistoryOpen(true);
+                          }}
+                          aria-label={`Stock history for ${product.name}`}
+                        >
+                          <History className="size-3.5" aria-hidden />
+                          Stock history
+                        </Button>
+                        {canManage ? (
                           <Button
                             variant="ghost"
                             size="sm"
@@ -276,9 +293,9 @@ function ProductsPage() {
                             <Power className="size-3.5" aria-hidden />
                             {product.is_active ? "Deactivate" : "Activate"}
                           </Button>
-                        </div>
-                      </TableCell>
-                    ) : null}
+                        ) : null}
+                      </div>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -310,6 +327,15 @@ function ProductsPage() {
         isSaving={saveMutation.isPending}
         submitError={saveMutation.error instanceof Error ? saveMutation.error.message : null}
         onSubmit={(input) => saveMutation.mutate(input)}
+      />
+
+      <ProductHistoryDialog
+        open={historyOpen}
+        onOpenChange={(open) => {
+          setHistoryOpen(open);
+          if (!open) setHistoryProduct(undefined);
+        }}
+        product={historyProduct}
       />
     </div>
   );
