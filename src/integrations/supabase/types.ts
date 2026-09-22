@@ -168,6 +168,70 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount: number
+          business_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          payment_method: string
+          payment_status: string
+          reference: string | null
+          sale_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          business_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          payment_method: string
+          payment_status?: string
+          reference?: string | null
+          sale_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          business_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          payment_method?: string
+          payment_status?: string
+          reference?: string | null
+          sale_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           business_id: string
@@ -262,6 +326,162 @@ export type Database = {
           },
         ]
       }
+      sale_items: {
+        Row: {
+          business_id: string
+          created_at: string
+          discount_amount: number
+          id: string
+          line_subtotal: number
+          product_id: string | null
+          product_name: string
+          product_sku: string | null
+          quantity: number
+          sale_id: string
+          unit: string
+          unit_price: number
+        }
+        Insert: {
+          business_id?: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          line_subtotal: number
+          product_id?: string | null
+          product_name: string
+          product_sku?: string | null
+          quantity: number
+          sale_id: string
+          unit?: string
+          unit_price: number
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          line_subtotal?: number
+          product_id?: string | null
+          product_name?: string
+          product_sku?: string | null
+          quantity?: number
+          sale_id?: string
+          unit?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sale_items_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_items_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sale_number_sequences: {
+        Row: {
+          business_id: string
+          last_number: number
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          last_number?: number
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          last_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sale_number_sequences_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales: {
+        Row: {
+          business_id: string
+          created_at: string
+          created_by: string | null
+          discount_amount: number
+          id: string
+          notes: string | null
+          payment_status: string
+          sale_number: string | null
+          sale_status: string
+          subtotal: number
+          tax_amount: number
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          business_id?: string
+          created_at?: string
+          created_by?: string | null
+          discount_amount?: number
+          id?: string
+          notes?: string | null
+          payment_status?: string
+          sale_number?: string | null
+          sale_status?: string
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          created_by?: string | null
+          discount_amount?: number
+          id?: string
+          notes?: string | null
+          payment_status?: string
+          sale_number?: string | null
+          sale_status?: string
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -352,6 +572,7 @@ export type Database = {
         }
         Returns: string
       }
+      next_sale_number: { Args: { p_business_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
