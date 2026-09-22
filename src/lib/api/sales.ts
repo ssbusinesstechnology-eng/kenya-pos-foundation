@@ -7,11 +7,19 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import { friendlyDataError } from "@/lib/errors";
-import type { CheckoutInput, CheckoutResult, SaleDetail } from "./types";
+import type {
+  CheckoutInput,
+  CheckoutResult,
+  SaleDetail,
+  SaleListRow,
+  SalesQuery,
+  SalesPage,
+} from "./types";
 
 export const saleKeys = {
   all: ["sales"] as const,
   detail: (id: string) => ["sales", "detail", id] as const,
+  list: (query: SalesQuery) => ["sales", "list", query] as const,
 };
 
 function translateCheckoutError(error: unknown): string {
@@ -80,14 +88,103 @@ export async function checkoutSale(input: CheckoutInput): Promise<CheckoutResult
   return data as unknown as CheckoutResult;
 }
 
+/**
+ * One sale, read entirely from what was stored at the time of sale.
+ * Product name, SKU, unit and unit price come from sale_items snapshots — the
+ * current product record is never consulted.
+ */
 export async function fetchSale(saleId: string): Promise<SaleDetail | null> {
   const { data, error } = await supabase
     .from("sales")
     .select(
-      "id, sale_number, subtotal, discount_amount, tax_amount, total_amount, payment_status, sale_status, notes, created_at, sale_items(id, product_name, product_sku, unit, quantity, unit_price, discount_amount, line_subtotal), payments(id, payment_method, amount, payment_status, reference, created_at)",
+      "id, sale_number, subtotal, discount_amount, tax_amount, total_amount, payment_status, sale_status, notes, created_at, created_by, creator:profiles!sales_created_by_fkey(full_name), sale_items(id, product_name, product_sku, unit, quantity, unit_price, discount_amount, line_subtotal), payments(id, payment_method, amount, payment_status, reference, created_at)",
     )
     .eq("id", saleId)
     .maybeSingle();
   if (error) throw new Error(friendlyDataError(error));
   return (data as unknown as SaleDetail | null) ?? null;
+}
+
+const LIST_COLUMNS =
+  "id, sale_number, total_amount, payment_status, sale_status, created_at, created_by, creator:profiles!sales_created_by_fkey(full_name), payments(id, payment_method, reference, payment_status)";
+
+const LIST_COLUMNS_INNER =
+  "id, sale_number, total_amount, payment_status, sale_status, created_at, created_by, creator:profiles!sales_created_by_fkey(full_name), payments!inner(id, payment_method, reference, payment_status)";
+
+const SEARCH_CAP = 200;
+
+type Builder = ReturnType<ReturnType<typeof supabase.from>["select"]>;
+
+function applyFilters(query: Builder, q: SalesQuery): Builder {
+  let next = query;
+  if (q.saleStatus !== "ALL") next = next.eq("sale_status", q.saleStatus);
+  if (q.paymentStatus !== "ALL") next = next.eq("payment_status", q.paymentStatus);
+  if (q.from) next = next.gte("created_at", q.from);
+  if (q.to) next = next.lt("created_at", q.to);
+  if (q.paymentMethod !== "ALL") next = next.eq("payments.payment_method", q.paymentMethod);
+  return next;
+}
+
+function escapeLike(term: string): string {
+  return term.replace(/[%_,()]/g, " ").trim();
+}
+
+/**
+ * Newest first, page by page — never the whole table.
+ * Searching by sale reference and by payment reference are two separate reads
+ * (they match different tables); results are merged, de-duplicated and capped.
+ */
+export async function fetchSalesPage(q: SalesQuery): Promise<SalesPage> {
+  const term = escapeLike(q.search);
+
+  if (term) {
+    const numberQuery = applyFilters(
+      supabase.from("sales").select(q.paymentMethod === "ALL" ? LIST_COLUMNS : LIST_COLUMNS_INNER),
+      q,
+    )
+      .ilike("sale_number", `%${term}%`)
+      .order("created_at", { ascending: false })
+      .limit(SEARCH_CAP);
+
+    const refQuery = applyFilters(supabase.from("sales").select(LIST_COLUMNS_INNER), q)
+      .ilike("payments.reference", `%${term}%`)
+      .order("created_at", { ascending: false })
+      .limit(SEARCH_CAP);
+
+    const [byNumber, byRef] = await Promise.all([numberQuery, refQuery]);
+    if (byNumber.error) throw new Error(friendlyDataError(byNumber.error));
+    if (byRef.error) throw new Error(friendlyDataError(byRef.error));
+
+    const merged = new Map<string, SaleListRow>();
+    for (const row of [
+      ...((byNumber.data ?? []) as unknown as SaleListRow[]),
+      ...((byRef.data ?? []) as unknown as SaleListRow[]),
+    ]) {
+      merged.set(row.id, row);
+    }
+    const rows = [...merged.values()].sort((a, b) => b.created_at.localeCompare(a.created_at));
+    const start = q.page * q.pageSize;
+    return {
+      rows: rows.slice(start, start + q.pageSize),
+      total: rows.length,
+      capped: rows.length >= SEARCH_CAP,
+    };
+  }
+
+  const from = q.page * q.pageSize;
+  const { data, error, count } = await applyFilters(
+    supabase
+      .from("sales")
+      .select(q.paymentMethod === "ALL" ? LIST_COLUMNS : LIST_COLUMNS_INNER, { count: "exact" }),
+    q,
+  )
+    .order("created_at", { ascending: false })
+    .range(from, from + q.pageSize - 1);
+
+  if (error) throw new Error(friendlyDataError(error));
+  return {
+    rows: (data ?? []) as unknown as SaleListRow[],
+    total: count ?? 0,
+    capped: false,
+  };
 }
