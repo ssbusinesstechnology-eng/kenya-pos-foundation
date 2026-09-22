@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.sales_before_insert() FROM PUBLIC, anon, authenticated;
