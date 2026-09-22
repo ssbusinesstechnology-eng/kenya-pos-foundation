@@ -14,7 +14,7 @@ export const productKeys = {
 
 function translateProductError(error: unknown): string {
   const raw = error instanceof Error ? error.message : String((error as { message?: string })?.message ?? "");
-  if (/products_business_id_sku|duplicate key|unique constraint/i.test(raw)) {
+  if (/products_business_sku_key|duplicate key|unique constraint/i.test(raw)) {
     return "Another product already uses that SKU. Please choose a different one.";
   }
   return friendlyDataError(error);
