@@ -179,8 +179,66 @@ export interface SaleDetail {
   sale_status: string;
   notes: string | null;
   created_at: string;
+  created_by: string | null;
+  creator: { full_name: string | null } | null;
   sale_items: SaleItemRecord[];
   payments: PaymentRecord[];
+}
+
+/* ---------------- sales history ---------------- */
+
+export type SaleStatus = "COMPLETED" | "VOIDED";
+export type PaymentStatus = "PAID" | "PENDING" | "FAILED" | "REFUNDED";
+
+export const SALE_STATUS_LABELS: Record<SaleStatus, string> = {
+  COMPLETED: "Completed",
+  VOIDED: "Voided",
+};
+
+export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
+  PAID: "Paid",
+  PENDING: "Pending",
+  FAILED: "Failed",
+  REFUNDED: "Refunded",
+};
+
+export type DatePreset = "all" | "today" | "yesterday" | "last7" | "last30" | "custom";
+
+export interface SaleListRow {
+  id: string;
+  sale_number: string;
+  total_amount: number;
+  payment_status: string;
+  sale_status: string;
+  created_at: string;
+  created_by: string | null;
+  creator: { full_name: string | null } | null;
+  payments: {
+    id: string;
+    payment_method: PaymentMethod;
+    reference: string | null;
+    payment_status: string;
+  }[];
+}
+
+export interface SalesQuery {
+  search: string;
+  /** Inclusive lower bound, ISO. */
+  from: string | null;
+  /** Exclusive upper bound, ISO. */
+  to: string | null;
+  paymentMethod: PaymentMethod | "ALL";
+  saleStatus: SaleStatus | "ALL";
+  paymentStatus: PaymentStatus | "ALL";
+  page: number;
+  pageSize: number;
+}
+
+export interface SalesPage {
+  rows: SaleListRow[];
+  total: number;
+  /** True when a search hit the read cap, so the count is a lower bound. */
+  capped: boolean;
 }
 
 export interface InventoryMovement {

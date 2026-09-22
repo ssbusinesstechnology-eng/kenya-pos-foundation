@@ -1,6 +1,7 @@
 import {
   BarChart3,
   Boxes,
+  History,
   LayoutDashboard,
   Package,
   Receipt,
@@ -19,6 +20,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "Sales", to: "/sales", icon: Receipt },
+  { label: "Sales history", to: "/sales-history", icon: History },
   { label: "Products", to: "/products", icon: Package },
   { label: "Inventory", to: "/inventory", icon: Boxes },
   { label: "Customers", to: "/customers", icon: UserSquare2 },
