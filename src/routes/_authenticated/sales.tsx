@@ -11,6 +11,7 @@ import { PosSearchInput, ProductTile } from "@/components/pos/ProductPicker";
 import { useCart } from "@/components/pos/useCart";
 import { inventoryKeys } from "@/lib/api/inventory";
 import { fetchProducts, productKeys } from "@/lib/api/products";
+import { saleKeys } from "@/lib/api/sales";
 import { useAccount } from "@/lib/api/useAccount";
 import { formatMoneyCents, formatQuantity } from "@/lib/money";
 
@@ -185,6 +186,7 @@ function PosPage() {
           cart.clearCart();
           void queryClient.invalidateQueries({ queryKey: productKeys.all });
           void queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
+          void queryClient.invalidateQueries({ queryKey: saleKeys.all });
         }}
         onViewSale={(saleId) => setViewSaleId(saleId)}
       />
