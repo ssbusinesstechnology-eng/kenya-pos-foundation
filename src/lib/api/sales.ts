@@ -21,7 +21,10 @@ function translateCheckoutError(error: unknown): string {
   const stock = /INSUFFICIENT_STOCK:([^:]*):([^:]*):([^:]*)/.exec(raw);
   if (stock) {
     const name = stock[1];
-    const available = stock[2];
+    const parsedAvailable = Number(stock[2]);
+    const available = Number.isFinite(parsedAvailable)
+      ? parsedAvailable.toLocaleString("en-KE", { maximumFractionDigits: 3 })
+      : stock[2];
     const unit = stock[3];
     return name
       ? `Stock changed. ${name} now has only ${available} ${unit} left. Please review your cart.`
