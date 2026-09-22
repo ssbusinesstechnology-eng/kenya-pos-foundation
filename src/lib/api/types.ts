@@ -181,8 +181,55 @@ export interface SaleDetail {
   created_at: string;
   created_by: string | null;
   creator: { full_name: string | null } | null;
+  customer_id: string | null;
+  customer: CustomerSummary | null;
   sale_items: SaleItemRecord[];
   payments: PaymentRecord[];
+}
+
+/* ---------------- customers ---------------- */
+
+export interface Customer {
+  id: string;
+  business_id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  notes: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Just enough to show a customer next to a sale. */
+export interface CustomerSummary {
+  id: string;
+  name: string;
+  phone: string | null;
+  is_active?: boolean;
+}
+
+export interface CustomerInput {
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  notes: string | null;
+}
+
+export type CustomerStatusFilter = "ALL" | "ACTIVE" | "INACTIVE";
+
+export interface CustomersQuery {
+  search: string;
+  status: CustomerStatusFilter;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomersPage {
+  rows: Customer[];
+  total: number;
 }
 
 /* ---------------- sales history ---------------- */
@@ -213,6 +260,8 @@ export interface SaleListRow {
   created_at: string;
   created_by: string | null;
   creator: { full_name: string | null } | null;
+  customer_id: string | null;
+  customer: CustomerSummary | null;
   payments: {
     id: string;
     payment_method: PaymentMethod;
