@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common/StateViews";
 import { CartPanel } from "@/components/pos/CartPanel";
 import { CheckoutDialog } from "@/components/pos/CheckoutDialog";
-import { SaleDetailDialog } from "@/components/pos/SaleDetailDialog";
+import { SaleDetailDialog } from "@/components/sales/SaleDetailDialog";
 import { PosSearchInput, ProductTile } from "@/components/pos/ProductPicker";
 import { useCart } from "@/components/pos/useCart";
 import { inventoryKeys } from "@/lib/api/inventory";
