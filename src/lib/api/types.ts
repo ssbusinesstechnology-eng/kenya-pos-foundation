@@ -91,14 +91,97 @@ export const PRODUCT_UNITS = [
   "metre",
 ] as const;
 
-export type MovementType = "INITIAL_STOCK" | "RESTOCK" | "ADJUSTMENT_IN" | "ADJUSTMENT_OUT";
+export type MovementType =
+  | "INITIAL_STOCK"
+  | "RESTOCK"
+  | "ADJUSTMENT_IN"
+  | "ADJUSTMENT_OUT"
+  | "SALE";
 
 export const MOVEMENT_LABELS: Record<MovementType, string> = {
   INITIAL_STOCK: "Initial stock",
   RESTOCK: "Restock",
   ADJUSTMENT_IN: "Adjustment in",
   ADJUSTMENT_OUT: "Adjustment out",
+  SALE: "Sale",
 };
+
+/* ---------------- sales / checkout ---------------- */
+
+export type PaymentMethod = "CASH" | "MPESA" | "CARD" | "OTHER";
+
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  CASH: "Cash",
+  MPESA: "M-Pesa",
+  CARD: "Card",
+  OTHER: "Other",
+};
+
+export interface CheckoutItem {
+  product_id: string;
+  quantity: number;
+  unit_price: number;
+  discount_amount: number;
+}
+
+export interface CheckoutInput {
+  items: CheckoutItem[];
+  paymentMethod: PaymentMethod;
+  /** Amount handed over. For cash this may exceed the total (change is shown). */
+  paymentAmount: number;
+  discountAmount: number;
+  /** Stable id per checkout attempt — the database uses it to reject duplicates. */
+  clientRequestId: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface CheckoutResult {
+  sale_id: string;
+  sale_number: string;
+  total_amount: number;
+  subtotal: number;
+  discount_amount: number;
+  payment_method: PaymentMethod;
+  payment_amount: number;
+  created_at: string;
+  duplicate: boolean;
+}
+
+export interface SaleItemRecord {
+  id: string;
+  product_name: string;
+  product_sku: string | null;
+  unit: string;
+  quantity: number;
+  unit_price: number;
+  discount_amount: number;
+  line_subtotal: number;
+}
+
+export interface PaymentRecord {
+  id: string;
+  payment_method: PaymentMethod;
+  amount: number;
+  payment_status: string;
+  reference: string | null;
+  created_at: string;
+}
+
+export interface SaleDetail {
+  id: string;
+  sale_number: string;
+  subtotal: number;
+  discount_amount: number;
+  tax_amount: number;
+  total_amount: number;
+  payment_status: string;
+  sale_status: string;
+  notes: string | null;
+  created_at: string;
+  sale_items: SaleItemRecord[];
+  payments: PaymentRecord[];
+}
 
 export interface InventoryMovement {
   id: string;

@@ -1,12 +1,15 @@
 import { useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Info, Package, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common/StateViews";
 import { CartPanel } from "@/components/pos/CartPanel";
+import { CheckoutDialog } from "@/components/pos/CheckoutDialog";
+import { SaleDetailDialog } from "@/components/pos/SaleDetailDialog";
 import { PosSearchInput, ProductTile } from "@/components/pos/ProductPicker";
 import { useCart } from "@/components/pos/useCart";
+import { inventoryKeys } from "@/lib/api/inventory";
 import { fetchProducts, productKeys } from "@/lib/api/products";
 import { useAccount } from "@/lib/api/useAccount";
 import { formatMoneyCents, formatQuantity } from "@/lib/money";
@@ -38,6 +41,9 @@ function PosPage() {
   const cart = useCart();
   const searchRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [viewSaleId, setViewSaleId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const sellable = useMemo(
     () => (products.data ?? []).filter((product) => product.is_active),
@@ -69,7 +75,7 @@ function PosPage() {
     <div className="space-y-6 pb-24 lg:pb-0">
       <PageHeader
         title="Point of sale"
-        description="Search, tap to add, adjust quantities — the running total updates as you go. Nothing is recorded until checkout, which arrives in the next phase."
+        description="Search, tap to add, adjust quantities — the running total updates as you go. Nothing is recorded until you confirm payment at checkout."
         action={
           <Button
             variant="outline"
@@ -164,9 +170,33 @@ function PosPage() {
             onQuantityChange={cart.setQuantity}
             onRemove={cart.removeLine}
             onClear={cart.clearCart}
+            onCheckout={() => setCheckoutOpen(true)}
           />
         </div>
       </div>
+
+      <CheckoutDialog
+        open={checkoutOpen}
+        onOpenChange={setCheckoutOpen}
+        lines={cart.lines}
+        totals={cart.totals}
+        currency={currency}
+        onCompleted={() => {
+          cart.clearCart();
+          void queryClient.invalidateQueries({ queryKey: productKeys.all });
+          void queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
+        }}
+        onViewSale={(saleId) => setViewSaleId(saleId)}
+      />
+
+      <SaleDetailDialog
+        saleId={viewSaleId}
+        currency={currency}
+        onOpenChange={(open) => {
+          if (!open) setViewSaleId(null);
+        }}
+      />
+
 
       {cart.lines.length > 0 ? (
         <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card/95 px-4 py-3 backdrop-blur lg:hidden">
@@ -179,9 +209,12 @@ function PosPage() {
                 {formatMoneyCents(cart.totals.totalCents, currency)}
               </p>
             </div>
-            <Button asChild variant="outline">
-              <a href="#cart">View cart</a>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline">
+                <a href="#cart">View cart</a>
+              </Button>
+              <Button onClick={() => setCheckoutOpen(true)}>Checkout</Button>
+            </div>
           </div>
         </div>
       ) : null}

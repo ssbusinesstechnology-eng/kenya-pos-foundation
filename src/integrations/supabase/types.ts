@@ -422,6 +422,7 @@ export type Database = {
       sales: {
         Row: {
           business_id: string
+          client_request_id: string | null
           created_at: string
           created_by: string | null
           discount_amount: number
@@ -437,6 +438,7 @@ export type Database = {
         }
         Insert: {
           business_id?: string
+          client_request_id?: string | null
           created_at?: string
           created_by?: string | null
           discount_amount?: number
@@ -452,6 +454,7 @@ export type Database = {
         }
         Update: {
           business_id?: string
+          client_request_id?: string | null
           created_at?: string
           created_by?: string | null
           discount_amount?: number
@@ -515,6 +518,18 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      checkout_sale: {
+        Args: {
+          p_client_request_id?: string
+          p_discount_amount?: number
+          p_items: Json
+          p_notes?: string
+          p_payment_amount: number
+          p_payment_method: string
+          p_reference?: string
+        }
+        Returns: Json
       }
       create_business_for_owner: {
         Args: {
