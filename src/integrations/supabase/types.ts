@@ -101,6 +101,53 @@ export type Database = {
         }
         Relationships: []
       }
+      customers: {
+        Row: {
+          address: string | null
+          business_id: string
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean
+          name: string
+          notes: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          business_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          business_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_movements: {
         Row: {
           business_id: string
@@ -425,6 +472,7 @@ export type Database = {
           client_request_id: string | null
           created_at: string
           created_by: string | null
+          customer_id: string | null
           discount_amount: number
           id: string
           notes: string | null
@@ -441,6 +489,7 @@ export type Database = {
           client_request_id?: string | null
           created_at?: string
           created_by?: string | null
+          customer_id?: string | null
           discount_amount?: number
           id?: string
           notes?: string | null
@@ -457,6 +506,7 @@ export type Database = {
           client_request_id?: string | null
           created_at?: string
           created_by?: string | null
+          customer_id?: string | null
           discount_amount?: number
           id?: string
           notes?: string | null
@@ -481,6 +531,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
             referencedColumns: ["id"]
           },
         ]
@@ -522,6 +579,7 @@ export type Database = {
       checkout_sale: {
         Args: {
           p_client_request_id?: string
+          p_customer_id?: string
           p_discount_amount?: number
           p_items: Json
           p_notes?: string
