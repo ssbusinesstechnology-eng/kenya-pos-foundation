@@ -90,9 +90,10 @@ export function CustomerFormDialog({
       // Warn once about a same-phone customer in this business, then allow it.
       if (trimmedPhone !== "" && duplicateWarning === null) {
         const matches = await findCustomersByPhone(trimmedPhone, customer?.id);
-        if (matches.length > 0) {
+        const existing = matches[0];
+        if (existing) {
           setDuplicateWarning(
-            `${matches[0].name} already uses ${trimmedPhone}. Save anyway to keep both records.`,
+            `${existing.name} already uses ${trimmedPhone}. Save anyway to keep both records.`,
           );
           setSaving(false);
           return;
