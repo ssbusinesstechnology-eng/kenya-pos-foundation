@@ -52,7 +52,8 @@ export function StockAdjustDialog({
   const [quantity, setQuantity] = useState("");
   const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  type FieldErrors = { product?: string; quantity?: string; reason?: string };
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   useEffect(() => {
     if (!open) return;
@@ -73,7 +74,7 @@ export function StockAdjustDialog({
       : null;
 
   function submit() {
-    const next: Record<string, string> = {};
+    const next: FieldErrors = {};
     if (!productId) next.product = "Please choose a product.";
     if (quantity.trim() === "") next.quantity = "Please enter a quantity.";
     else if (!Number.isFinite(quantityValue) || quantityValue <= 0) {
