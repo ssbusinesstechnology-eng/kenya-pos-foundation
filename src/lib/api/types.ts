@@ -134,6 +134,8 @@ export interface CheckoutInput {
   clientRequestId: string;
   reference?: string;
   notes?: string;
+  /** Optional — a sale with no customer is a walk-in sale. Re-checked server-side. */
+  customerId?: string | null;
 }
 
 export interface CheckoutResult {

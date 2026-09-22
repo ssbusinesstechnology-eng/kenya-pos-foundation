@@ -70,6 +70,13 @@ function translateCheckoutError(error: unknown): string {
   if (/NO_BUSINESS/.test(raw)) {
     return "Finish setting up your business before making a sale.";
   }
+  const inactiveCustomer = /CUSTOMER_INACTIVE:(.*)/.exec(raw);
+  if (inactiveCustomer) {
+    return `${inactiveCustomer[1]} is marked inactive and can't be added to a new sale.`;
+  }
+  if (/CUSTOMER_NOT_FOUND/.test(raw)) {
+    return "That customer is no longer available. Remove the customer and try again.";
+  }
   return friendlyDataError(error);
 }
 
@@ -80,6 +87,7 @@ export async function checkoutSale(input: CheckoutInput): Promise<CheckoutResult
     p_payment_amount: input.paymentAmount,
     p_discount_amount: input.discountAmount,
     p_client_request_id: input.clientRequestId,
+    p_customer_id: input.customerId ?? undefined,
     ...(input.reference ? { p_reference: input.reference } : {}),
     ...(input.notes ? { p_notes: input.notes } : {}),
   });
