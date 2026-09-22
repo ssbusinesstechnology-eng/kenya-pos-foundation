@@ -70,6 +70,13 @@ function translateCheckoutError(error: unknown): string {
   if (/NO_BUSINESS/.test(raw)) {
     return "Finish setting up your business before making a sale.";
   }
+  const inactiveCustomer = /CUSTOMER_INACTIVE:(.*)/.exec(raw);
+  if (inactiveCustomer) {
+    return `${inactiveCustomer[1]} is marked inactive and can't be added to a new sale.`;
+  }
+  if (/CUSTOMER_NOT_FOUND/.test(raw)) {
+    return "That customer is no longer available. Remove the customer and try again.";
+  }
   return friendlyDataError(error);
 }
 
@@ -80,6 +87,7 @@ export async function checkoutSale(input: CheckoutInput): Promise<CheckoutResult
     p_payment_amount: input.paymentAmount,
     p_discount_amount: input.discountAmount,
     p_client_request_id: input.clientRequestId,
+    ...(input.customerId ? { p_customer_id: input.customerId } : {}),
     ...(input.reference ? { p_reference: input.reference } : {}),
     ...(input.notes ? { p_notes: input.notes } : {}),
   });
@@ -97,7 +105,7 @@ export async function fetchSale(saleId: string): Promise<SaleDetail | null> {
   const { data, error } = await supabase
     .from("sales")
     .select(
-      "id, sale_number, subtotal, discount_amount, tax_amount, total_amount, payment_status, sale_status, notes, created_at, created_by, creator:profiles!sales_created_by_fkey(full_name), sale_items(id, product_name, product_sku, unit, quantity, unit_price, discount_amount, line_subtotal), payments(id, payment_method, amount, payment_status, reference, created_at)",
+      "id, sale_number, subtotal, discount_amount, tax_amount, total_amount, payment_status, sale_status, notes, created_at, created_by, customer_id, creator:profiles!sales_created_by_fkey(full_name), customer:customers(id, name, phone, is_active), sale_items(id, product_name, product_sku, unit, quantity, unit_price, discount_amount, line_subtotal), payments(id, payment_method, amount, payment_status, reference, created_at)",
     )
     .eq("id", saleId)
     .maybeSingle();
@@ -105,11 +113,12 @@ export async function fetchSale(saleId: string): Promise<SaleDetail | null> {
   return (data as unknown as SaleDetail | null) ?? null;
 }
 
-const LIST_COLUMNS =
-  "id, sale_number, total_amount, payment_status, sale_status, created_at, created_by, creator:profiles!sales_created_by_fkey(full_name), payments(id, payment_method, reference, payment_status)";
+const LIST_BASE =
+  "id, sale_number, total_amount, payment_status, sale_status, created_at, created_by, customer_id, creator:profiles!sales_created_by_fkey(full_name), customer:customers(id, name, phone, is_active)";
 
-const LIST_COLUMNS_INNER =
-  "id, sale_number, total_amount, payment_status, sale_status, created_at, created_by, creator:profiles!sales_created_by_fkey(full_name), payments!inner(id, payment_method, reference, payment_status)";
+const LIST_COLUMNS = `${LIST_BASE}, payments(id, payment_method, reference, payment_status)`;
+
+const LIST_COLUMNS_INNER = `${LIST_BASE}, payments!inner(id, payment_method, reference, payment_status)`;
 
 const SEARCH_CAP = 200;
 
