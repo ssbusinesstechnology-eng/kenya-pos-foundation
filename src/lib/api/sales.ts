@@ -87,7 +87,7 @@ export async function checkoutSale(input: CheckoutInput): Promise<CheckoutResult
     p_payment_amount: input.paymentAmount,
     p_discount_amount: input.discountAmount,
     p_client_request_id: input.clientRequestId,
-    p_customer_id: input.customerId ?? undefined,
+    ...(input.customerId ? { p_customer_id: input.customerId } : {}),
     ...(input.reference ? { p_reference: input.reference } : {}),
     ...(input.notes ? { p_notes: input.notes } : {}),
   });
