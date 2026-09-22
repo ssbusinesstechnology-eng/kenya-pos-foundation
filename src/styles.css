@@ -179,3 +179,47 @@
     radial-gradient(900px 420px at 12% -8%, oklch(0.46 0.083 174 / 0.12), transparent 70%),
     radial-gradient(700px 380px at 92% 8%, oklch(0.78 0.128 74 / 0.14), transparent 70%);
 }
+
+/*
+ * Printing: only the receipt reaches the paper. Navigation, dialog chrome and
+ * buttons are hidden, and the receipt is laid out compactly for A4 or a small
+ * receipt roll.
+ */
+@media print {
+  @page {
+    margin: 10mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+    box-shadow: none !important;
+  }
+
+  .no-print,
+  [data-slot="dialog-close"],
+  [data-slot="dialog-overlay"] {
+    display: none !important;
+  }
+
+  #receipt-print,
+  #receipt-print * {
+    visibility: visible !important;
+  }
+
+  #receipt-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 80mm;
+    margin: 0;
+    border: 0 !important;
+    padding: 0 !important;
+    color: #000;
+    font-size: 11px;
+  }
+}
