@@ -91,6 +91,53 @@ export const PRODUCT_UNITS = [
   "metre",
 ] as const;
 
+export type MovementType = "INITIAL_STOCK" | "RESTOCK" | "ADJUSTMENT_IN" | "ADJUSTMENT_OUT";
+
+export const MOVEMENT_LABELS: Record<MovementType, string> = {
+  INITIAL_STOCK: "Initial stock",
+  RESTOCK: "Restock",
+  ADJUSTMENT_IN: "Adjustment in",
+  ADJUSTMENT_OUT: "Adjustment out",
+};
+
+export interface InventoryMovement {
+  id: string;
+  business_id: string;
+  product_id: string;
+  movement_type: MovementType;
+  quantity: number;
+  quantity_change: number;
+  previous_stock: number;
+  new_stock: number;
+  reason: string | null;
+  notes: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface StockAdjustmentInput {
+  productId: string;
+  movementType: MovementType;
+  quantity: number;
+  reason: string;
+  notes?: string;
+}
+
+export const STOCK_IN_REASONS = [
+  "Restocking",
+  "Initial stock",
+  "Returned stock",
+  "Other stock received",
+] as const;
+
+export const STOCK_OUT_REASONS = [
+  "Damaged goods",
+  "Lost stock",
+  "Expired stock",
+  "Manual correction",
+  "Other stock removal",
+] as const;
+
 export const ROLE_LABELS: Record<UserRole, string> = {
   owner: "Owner",
   manager: "Manager",
