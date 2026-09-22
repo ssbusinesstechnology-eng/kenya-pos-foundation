@@ -71,3 +71,10 @@ export async function adjustStock(input: StockAdjustmentInput): Promise<Inventor
   if (!data) throw new Error("We couldn't record that stock change. Please try again.");
   return data as unknown as InventoryMovement;
 }
+
+/** Names for the movement "recorded by" column. RLS decides what is visible. */
+export async function fetchTeamNames(): Promise<{ id: string; full_name: string | null }[]> {
+  const { data, error } = await supabase.from("profiles").select("id, full_name");
+  if (error) throw new Error(friendlyDataError(error));
+  return (data ?? []) as { id: string; full_name: string | null }[];
+}
