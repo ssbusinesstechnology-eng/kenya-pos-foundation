@@ -41,6 +41,7 @@ export function CartPanel({
   onQuantityChange,
   onRemove,
   onClear,
+  onCheckout,
 }: {
   lines: CartLine[];
   totals: CartTotals;
@@ -53,6 +54,7 @@ export function CartPanel({
   onQuantityChange: (product: Product, quantityMilli: number) => void;
   onRemove: (productId: string) => void;
   onClear: () => void;
+  onCheckout: () => void;
 }) {
   return (
     <div className="surface-panel flex h-full flex-col gap-4 p-4">
@@ -182,11 +184,16 @@ export function CartPanel({
           </div>
         </dl>
 
-        <Button size="lg" className="w-full" disabled title="Checkout arrives in the next phase">
+        <Button
+          size="lg"
+          className="w-full"
+          disabled={lines.length === 0}
+          onClick={onCheckout}
+        >
           Checkout
         </Button>
         <p className="text-center text-xs text-muted-foreground">
-          Payments and receipts arrive in the next phase — nothing is recorded yet.
+          Nothing is recorded until you confirm the payment.
         </p>
       </div>
     </div>
