@@ -192,6 +192,7 @@
 
   body {
     background: #fff !important;
+    overflow: visible !important;
   }
 
   body * {
@@ -199,7 +200,8 @@
     box-shadow: none !important;
   }
 
-  [data-slot="dialog-content"] {
+  [data-slot="dialog-content"],
+  [role="dialog"] {
     position: static !important;
     transform: none !important;
     max-height: none !important;
