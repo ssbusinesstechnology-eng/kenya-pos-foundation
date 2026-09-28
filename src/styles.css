@@ -199,6 +199,14 @@
     box-shadow: none !important;
   }
 
+  [data-slot="dialog-content"] {
+    position: static !important;
+    transform: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 0 !important;
+  }
+
   .no-print,
   [data-slot="dialog-close"],
   [data-slot="dialog-overlay"] {
