@@ -110,6 +110,18 @@ export function SaleDetailDialog({
               ) : null}
             </div>
 
+            <div className="flex items-center justify-between rounded-lg bg-secondary px-3 py-2 text-sm">
+              <span className="text-muted-foreground">Customer</span>
+              <span className="text-right font-medium">
+                {sale.data.customer ? sale.data.customer.name : "Walk-in"}
+                {sale.data.customer?.phone ? (
+                  <span className="block text-xs font-normal text-muted-foreground">
+                    {sale.data.customer.phone}
+                  </span>
+                ) : null}
+              </span>
+            </div>
+
             <ul className="space-y-2">
               {sale.data.sale_items.map((item) => (
                 <li
