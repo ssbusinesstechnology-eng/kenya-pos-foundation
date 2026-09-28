@@ -23,6 +23,7 @@ import { checkoutSale } from "@/lib/api/sales";
 import {
   PAYMENT_METHOD_LABELS,
   type CheckoutResult,
+  type CustomerSummary,
   type PaymentMethod,
 } from "@/lib/api/types";
 import {
@@ -49,6 +50,7 @@ export function CheckoutDialog({
   lines,
   totals,
   currency,
+  customer,
   onCompleted,
   onViewSale,
 }: {
@@ -57,6 +59,7 @@ export function CheckoutDialog({
   lines: CartLine[];
   totals: CartTotals;
   currency: string;
+  customer: CustomerSummary | null;
   onCompleted: () => void;
   onViewSale: (saleId: string) => void;
 }) {
@@ -119,6 +122,7 @@ export function CheckoutDialog({
         paymentAmount: fromCents(paymentAmountCents),
         discountAmount: fromCents(totals.discountCents),
         clientRequestId: requestId,
+        customerId: customer?.id ?? null,
         ...(reference.trim() ? { reference: reference.trim() } : {}),
         ...(notes.trim() ? { notes: notes.trim() } : {}),
       });
@@ -186,6 +190,17 @@ export function CheckoutDialog({
                     </li>
                   ))}
                 </ul>
+                <div className="flex items-center justify-between rounded-lg bg-secondary px-3 py-2 text-sm">
+                  <span className="text-muted-foreground">Customer</span>
+                  <span className="text-right font-medium">
+                    {customer ? customer.name : "Walk-in"}
+                    {customer?.phone ? (
+                      <span className="block text-xs font-normal text-muted-foreground">
+                        {customer.phone}
+                      </span>
+                    ) : null}
+                  </span>
+                </div>
                 <Totals totals={totals} currency={currency} />
               </div>
             ) : (

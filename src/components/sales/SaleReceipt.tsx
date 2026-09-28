@@ -58,6 +58,16 @@ export function SaleReceipt({
             <dd>{cashierName}</dd>
           </div>
         ) : null}
+        <div className="flex justify-between">
+          <dt className="text-muted-foreground">Customer</dt>
+          <dd className="text-right">{sale.customer ? sale.customer.name : "Walk-in"}</dd>
+        </div>
+        {sale.customer?.phone ? (
+          <div className="flex justify-between">
+            <dt className="text-muted-foreground">Phone</dt>
+            <dd>{sale.customer.phone}</dd>
+          </div>
+        ) : null}
       </dl>
 
       <table className="mt-4 w-full border-t border-border text-xs">

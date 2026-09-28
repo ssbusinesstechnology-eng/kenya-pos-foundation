@@ -376,6 +376,7 @@ function SalesHistoryPage() {
                 <TableRow>
                   <TableHead>Sale</TableHead>
                   <TableHead>Date &amp; time</TableHead>
+                  <TableHead className="hidden lg:table-cell">Customer</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead>Payment</TableHead>
                   <TableHead>Payment status</TableHead>
@@ -401,6 +402,13 @@ function SalesHistoryPage() {
                       <TableCell className="font-medium">{row.sale_number}</TableCell>
                       <TableCell className="whitespace-nowrap text-muted-foreground">
                         {formatWhen(row.created_at)}
+                      </TableCell>
+                      <TableCell className="hidden max-w-[180px] truncate lg:table-cell">
+                        {row.customer ? (
+                          row.customer.name
+                        ) : (
+                          <span className="text-muted-foreground">Walk-in</span>
+                        )}
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-right font-semibold">
                         {formatMoneyCents(toCents(Number(row.total_amount)), currency)}

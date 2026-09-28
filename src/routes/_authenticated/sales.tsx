@@ -12,6 +12,9 @@ import { useCart } from "@/components/pos/useCart";
 import { inventoryKeys } from "@/lib/api/inventory";
 import { fetchProducts, productKeys } from "@/lib/api/products";
 import { saleKeys } from "@/lib/api/sales";
+import { customerKeys } from "@/lib/api/customers";
+import { CustomerSelect } from "@/components/pos/CustomerSelect";
+import type { CustomerSummary } from "@/lib/api/types";
 import { useAccount } from "@/lib/api/useAccount";
 import { formatMoneyCents, formatQuantity } from "@/lib/money";
 
@@ -44,6 +47,8 @@ function PosPage() {
   const [search, setSearch] = useState("");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [viewSaleId, setViewSaleId] = useState<string | null>(null);
+  const [customer, setCustomer] = useState<CustomerSummary | null>(null);
+  const canManage = account?.profile.role === "owner" || account?.profile.role === "manager";
   const queryClient = useQueryClient();
 
   const sellable = useMemo(
@@ -158,7 +163,8 @@ function PosPage() {
           )}
         </div>
 
-        <div id="cart" className="lg:sticky lg:top-6">
+        <div id="cart" className="space-y-4 lg:sticky lg:top-6">
+          <CustomerSelect customer={customer} onChange={setCustomer} canAdd={canManage} />
           <CartPanel
             lines={cart.lines}
             totals={cart.totals}
@@ -170,7 +176,10 @@ function PosPage() {
             onDiscountInputChange={cart.setDiscountInput}
             onQuantityChange={cart.setQuantity}
             onRemove={cart.removeLine}
-            onClear={cart.clearCart}
+            onClear={() => {
+              cart.clearCart();
+              setCustomer(null);
+            }}
             onCheckout={() => setCheckoutOpen(true)}
           />
         </div>
@@ -182,11 +191,14 @@ function PosPage() {
         lines={cart.lines}
         totals={cart.totals}
         currency={currency}
+        customer={customer}
         onCompleted={() => {
           cart.clearCart();
+          setCustomer(null);
           void queryClient.invalidateQueries({ queryKey: productKeys.all });
           void queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
           void queryClient.invalidateQueries({ queryKey: saleKeys.all });
+          void queryClient.invalidateQueries({ queryKey: customerKeys.all });
         }}
         onViewSale={(saleId) => setViewSaleId(saleId)}
       />
