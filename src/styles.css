@@ -201,6 +201,7 @@
     background: #fff !important;
     overflow: visible !important;
     height: auto !important;
+    min-height: 0 !important;
   }
 
   body > *:not(.print-root) {
