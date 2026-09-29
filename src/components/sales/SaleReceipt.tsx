@@ -15,10 +15,12 @@ export function SaleReceipt({
   sale,
   business,
   cashierName,
+  printCopy = false,
 }: {
   sale: SaleDetail;
   business: Business | null;
   cashierName: string | null;
+  printCopy?: boolean;
 }) {
   const currency = business?.currency ?? "KES";
   const created = new Date(sale.created_at);
@@ -27,7 +29,7 @@ export function SaleReceipt({
 
   return (
     <div
-      id="receipt-print"
+      id={printCopy ? "receipt-print" : undefined}
       className="mx-auto w-full max-w-sm rounded-xl border border-border bg-card p-5 text-sm"
     >
       <header className="border-b border-border pb-3 text-center">

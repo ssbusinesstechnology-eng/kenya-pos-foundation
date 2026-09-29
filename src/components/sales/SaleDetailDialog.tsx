@@ -3,6 +3,7 @@
  * All item and total values are the ones stored with the sale.
  */
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Printer, ReceiptText } from "lucide-react";
 import {
@@ -85,6 +86,19 @@ export function SaleDetailDialog({
               business={account?.business ?? null}
               cashierName={staffName}
             />
+            {typeof document !== "undefined"
+              ? createPortal(
+                  <div className="print-root">
+                    <SaleReceipt
+                      sale={sale.data}
+                      business={account?.business ?? null}
+                      cashierName={staffName}
+                      printCopy
+                    />
+                  </div>,
+                  document.body,
+                )
+              : null}
             <DialogFooter className="no-print gap-2 sm:justify-between">
               <Button variant="outline" onClick={() => setShowReceipt(false)}>
                 Back to details
