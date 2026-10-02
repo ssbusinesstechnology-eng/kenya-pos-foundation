@@ -5,7 +5,8 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Printer, ReceiptText } from "lucide-react";
+import { Eye, Printer, ReceiptText } from "lucide-react";
+import { ReceiptPrintPreview } from "@/components/sales/ReceiptPrintPreview";
 import {
   Dialog,
   DialogContent,
@@ -40,6 +41,7 @@ export function SaleDetailDialog({
 }) {
   const { data: account } = useAccount();
   const [showReceipt, setShowReceipt] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const sale = useQuery({
     queryKey: saleKeys.detail(saleId ?? "none"),
@@ -48,7 +50,10 @@ export function SaleDetailDialog({
   });
 
   useEffect(() => {
-    if (!saleId) setShowReceipt(false);
+    if (!saleId) {
+      setShowReceipt(false);
+      setShowPreview(false);
+    }
   }, [saleId]);
 
   const staffName =
@@ -103,11 +108,25 @@ export function SaleDetailDialog({
               <Button variant="outline" onClick={() => setShowReceipt(false)}>
                 Back to details
               </Button>
-              <Button onClick={() => window.print()}>
-                <Printer className="size-4" aria-hidden />
-                Print receipt
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" onClick={() => setShowPreview(true)}>
+                  <Eye className="size-4" aria-hidden />
+                  Print preview
+                </Button>
+                <Button onClick={() => window.print()}>
+                  <Printer className="size-4" aria-hidden />
+                  Print receipt
+                </Button>
+              </div>
             </DialogFooter>
+            {showPreview ? (
+              <ReceiptPrintPreview
+                sale={sale.data}
+                business={account?.business ?? null}
+                cashierName={staffName}
+                onClose={() => setShowPreview(false)}
+              />
+            ) : null}
           </>
         ) : (
           <div className="space-y-4">
