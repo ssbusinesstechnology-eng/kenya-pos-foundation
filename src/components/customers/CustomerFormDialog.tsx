@@ -18,11 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FormError } from "@/components/common/FormError";
-import {
-  createCustomer,
-  findCustomersByPhone,
-  updateCustomer,
-} from "@/lib/api/customers";
+import { createCustomer, findCustomersByPhone, updateCustomer } from "@/lib/api/customers";
 import type { Customer } from "@/lib/api/types";
 
 const EMAIL = /^[^@\s]+@[^@\s.]+\.[^@\s]+$/;
@@ -114,7 +110,9 @@ export function CustomerFormDialog({
       onOpenChange(false);
     } catch (caught) {
       setError(
-        caught instanceof Error ? caught.message : "We couldn't save that customer. Please try again.",
+        caught instanceof Error
+          ? caught.message
+          : "We couldn't save that customer. Please try again.",
       );
     } finally {
       setSaving(false);
@@ -211,11 +209,7 @@ export function CustomerFormDialog({
           </Button>
           <Button onClick={() => void save()} disabled={saving}>
             {saving ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
-            {duplicateWarning
-              ? "Save anyway"
-              : customer
-                ? "Save changes"
-                : "Add customer"}
+            {duplicateWarning ? "Save anyway" : customer ? "Save changes" : "Add customer"}
           </Button>
         </DialogFooter>
       </DialogContent>

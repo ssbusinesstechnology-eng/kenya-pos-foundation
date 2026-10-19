@@ -4,13 +4,7 @@
  */
 import { useCallback, useMemo, useState } from "react";
 import type { Product } from "@/lib/api/types";
-import {
-  lineTotalCents,
-  percentOfCents,
-  sumCents,
-  toCents,
-  toMilli,
-} from "@/lib/money";
+import { lineTotalCents, percentOfCents, sumCents, toCents, toMilli } from "@/lib/money";
 
 export interface CartLine {
   productId: string;
@@ -41,31 +35,26 @@ export function useCart() {
 
   const clearNotice = useCallback(() => setNotice(null), []);
 
-  const setQuantity = useCallback(
-    (product: Product, quantityMilli: number) => {
-      const availableMilli = toMilli(product.stock_quantity);
-      if (quantityMilli <= 0) {
-        setLines((prev) => prev.filter((line) => line.productId !== product.id));
-        return;
-      }
-      if (quantityMilli > availableMilli) {
-        setNotice(`Only ${product.stock_quantity} ${product.unit} of ${product.name} available.`);
-        setLines((prev) =>
-          prev.map((line) =>
-            line.productId === product.id ? { ...line, quantityMilli: availableMilli } : line,
-          ),
-        );
-        return;
-      }
-      setNotice(null);
+  const setQuantity = useCallback((product: Product, quantityMilli: number) => {
+    const availableMilli = toMilli(product.stock_quantity);
+    if (quantityMilli <= 0) {
+      setLines((prev) => prev.filter((line) => line.productId !== product.id));
+      return;
+    }
+    if (quantityMilli > availableMilli) {
+      setNotice(`Only ${product.stock_quantity} ${product.unit} of ${product.name} available.`);
       setLines((prev) =>
         prev.map((line) =>
-          line.productId === product.id ? { ...line, quantityMilli } : line,
+          line.productId === product.id ? { ...line, quantityMilli: availableMilli } : line,
         ),
       );
-    },
-    [],
-  );
+      return;
+    }
+    setNotice(null);
+    setLines((prev) =>
+      prev.map((line) => (line.productId === product.id ? { ...line, quantityMilli } : line)),
+    );
+  }, []);
 
   const addProduct = useCallback((product: Product) => {
     const availableMilli = toMilli(product.stock_quantity);

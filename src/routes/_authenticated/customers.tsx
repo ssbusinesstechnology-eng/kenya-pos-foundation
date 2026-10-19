@@ -136,7 +136,10 @@ function CustomersPage() {
         </p>
       ) : null}
       {actionError ? (
-        <p role="alert" className="rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm">
+        <p
+          role="alert"
+          className="rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm"
+        >
           {actionError}
         </p>
       ) : null}

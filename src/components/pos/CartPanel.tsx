@@ -22,12 +22,7 @@ import {
 } from "@/components/ui/select";
 import type { CartLine, CartTotals, DiscountMode } from "@/components/pos/useCart";
 import type { Product } from "@/lib/api/types";
-import {
-  formatMoneyCents,
-  formatQuantity,
-  lineTotalCents,
-  toMilli,
-} from "@/lib/money";
+import { formatMoneyCents, formatQuantity, lineTotalCents, toMilli } from "@/lib/money";
 
 export function CartPanel({
   lines,
@@ -134,8 +129,8 @@ export function CartPanel({
                 </div>
                 {product ? (
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {formatQuantity(line.quantityMilli)} {line.unit} ·{" "}
-                    {product.stock_quantity} {product.unit} available
+                    {formatQuantity(line.quantityMilli)} {line.unit} · {product.stock_quantity}{" "}
+                    {product.unit} available
                   </p>
                 ) : null}
               </li>
@@ -184,12 +179,7 @@ export function CartPanel({
           </div>
         </dl>
 
-        <Button
-          size="lg"
-          className="w-full"
-          disabled={lines.length === 0}
-          onClick={onCheckout}
-        >
+        <Button size="lg" className="w-full" disabled={lines.length === 0} onClick={onCheckout}>
           Checkout
         </Button>
         <p className="text-center text-xs text-muted-foreground">
@@ -213,7 +203,9 @@ function QuantityControl({
   const step = toMilli(1);
 
   if (!product) {
-    return <span className="text-sm text-muted-foreground">{formatQuantity(line.quantityMilli)}</span>;
+    return (
+      <span className="text-sm text-muted-foreground">{formatQuantity(line.quantityMilli)}</span>
+    );
   }
 
   const commit = (value: string) => {

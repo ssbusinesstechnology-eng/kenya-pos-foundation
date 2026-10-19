@@ -130,7 +130,9 @@ export function CheckoutDialog({
       setStep("success");
       onCompleted();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Unable to complete the sale. Please try again.");
+      setError(
+        caught instanceof Error ? caught.message : "Unable to complete the sale. Please try again.",
+      );
     } finally {
       setProcessing(false);
     }
@@ -377,9 +379,7 @@ function SuccessView({
           <CheckCircle2 className="size-5 text-primary" aria-hidden />
           Sale completed
         </DialogTitle>
-        <DialogDescription>
-          Stock has been updated and the payment is recorded.
-        </DialogDescription>
+        <DialogDescription>Stock has been updated and the payment is recorded.</DialogDescription>
       </DialogHeader>
       <div className="space-y-2 rounded-xl border border-border p-4">
         <p className="text-lg font-semibold">{result.sale_number}</p>

@@ -24,12 +24,14 @@ export const Route = createFileRoute("/_authenticated/sales")({
       { title: "Point of sale · S&S POS" },
       {
         name: "description",
-        content: "Ring up a sale: search your products, build the cart and see the total instantly.",
+        content:
+          "Ring up a sale: search your products, build the cart and see the total instantly.",
       },
       { property: "og:title", content: "Point of sale · S&S POS" },
       {
         property: "og:description",
-        content: "Ring up a sale: search your products, build the cart and see the total instantly.",
+        content:
+          "Ring up a sale: search your products, build the cart and see the total instantly.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -210,7 +212,6 @@ function PosPage() {
           if (!open) setViewSaleId(null);
         }}
       />
-
 
       {cart.lines.length > 0 ? (
         <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card/95 px-4 py-3 backdrop-blur lg:hidden">

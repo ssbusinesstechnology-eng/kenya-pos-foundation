@@ -27,9 +27,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
 });
 
-const UPCOMING = NAV_ITEMS.filter(
-  (item) => item.to !== "/dashboard" && item.to !== "/settings",
-);
+const UPCOMING = NAV_ITEMS.filter((item) => item.to !== "/dashboard" && item.to !== "/settings");
 
 function DashboardPage() {
   const { data: account, isPending, isError, error, refetch } = useAccount();
@@ -84,9 +82,7 @@ function DashboardPage() {
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Badge variant="secondary">{ROLE_LABELS[account.profile.role]}</Badge>
-            <Badge variant="outline">
-              {account.profile.is_active ? "Active" : "Inactive"}
-            </Badge>
+            <Badge variant="outline">{account.profile.is_active ? "Active" : "Inactive"}</Badge>
           </div>
         </div>
 

@@ -13,7 +13,8 @@ export const productKeys = {
 };
 
 function translateProductError(error: unknown): string {
-  const raw = error instanceof Error ? error.message : String((error as { message?: string })?.message ?? "");
+  const raw =
+    error instanceof Error ? error.message : String((error as { message?: string })?.message ?? "");
   if (/products_business_sku_key|duplicate key|unique constraint/i.test(raw)) {
     return "Another product already uses that SKU. Please choose a different one.";
   }
@@ -30,11 +31,7 @@ export async function fetchProducts(): Promise<Product[]> {
 }
 
 export async function createProduct(input: ProductInput): Promise<Product> {
-  const { data, error } = await supabase
-    .from("products")
-    .insert(input)
-    .select("*")
-    .maybeSingle();
+  const { data, error } = await supabase.from("products").insert(input).select("*").maybeSingle();
   if (error) throw new Error(translateProductError(error));
   if (!data) {
     throw new Error("We couldn't add that product. Only owners and managers can add products.");

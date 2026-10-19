@@ -19,8 +19,8 @@ export function ComingSoon({
         </span>
         <h2 className="text-lg font-semibold">Coming in a later phase</h2>
         <p className="max-w-md text-sm text-muted-foreground">
-          {title} arrives in {phase}. Your business, roles and permissions are already set
-          up, so nothing here will need re-doing.
+          {title} arrives in {phase}. Your business, roles and permissions are already set up, so
+          nothing here will need re-doing.
         </p>
       </div>
     </div>
