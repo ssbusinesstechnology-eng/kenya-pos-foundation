@@ -32,7 +32,8 @@ export function ReceiptPrintPreview({
         <div>
           <p className="font-semibold">Print preview</p>
           <p className="text-xs text-muted-foreground">
-            This is how your receipt will print. Choose "Save as PDF" in the print window to keep a copy.
+            This is how your receipt will print. Choose "Save as PDF" in the print window to keep a
+            copy.
           </p>
         </div>
         <div className="flex gap-2">

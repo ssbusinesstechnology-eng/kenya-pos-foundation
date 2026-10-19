@@ -6,13 +6,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { friendlyDataError } from "@/lib/errors";
 import { logAuditEvent } from "./account";
-import type {
-  Customer,
-  CustomerInput,
-  CustomersPage,
-  CustomersQuery,
-  SaleListRow,
-} from "./types";
+import type { Customer, CustomerInput, CustomersPage, CustomersQuery, SaleListRow } from "./types";
 
 export const customerKeys = {
   all: ["customers"] as const,
@@ -27,7 +21,11 @@ function translateCustomerError(error: unknown): string {
     error instanceof Error ? error.message : String((error as { message?: string })?.message ?? "");
   if (/customers_email_shape/.test(raw)) return "That email address doesn't look right.";
   if (/customers_name_not_blank/.test(raw)) return "Please enter the customer's name.";
-  if (/customers_name_len|customers_phone_len|customers_email_len|customers_address_len|customers_notes_len/.test(raw)) {
+  if (
+    /customers_name_len|customers_phone_len|customers_email_len|customers_address_len|customers_notes_len/.test(
+      raw,
+    )
+  ) {
     return "One of the details is too long. Please shorten it and try again.";
   }
   return friendlyDataError(error);
@@ -57,11 +55,7 @@ export async function fetchCustomersPage(q: CustomersQuery): Promise<CustomersPa
 }
 
 export async function fetchCustomer(id: string): Promise<Customer | null> {
-  const { data, error } = await supabase
-    .from("customers")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const { data, error } = await supabase.from("customers").select("*").eq("id", id).maybeSingle();
   if (error) throw new Error(translateCustomerError(error));
   return (data as Customer | null) ?? null;
 }

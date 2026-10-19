@@ -14,7 +14,8 @@ export const inventoryKeys = {
 };
 
 function translateStockError(error: unknown): string {
-  const raw = error instanceof Error ? error.message : String((error as { message?: string })?.message ?? "");
+  const raw =
+    error instanceof Error ? error.message : String((error as { message?: string })?.message ?? "");
   if (/INSUFFICIENT_STOCK/.test(raw)) {
     return "That would take the stock below zero. Reduce the quantity and try again.";
   }

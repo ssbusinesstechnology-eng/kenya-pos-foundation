@@ -92,11 +92,7 @@ export const PRODUCT_UNITS = [
 ] as const;
 
 export type MovementType =
-  | "INITIAL_STOCK"
-  | "RESTOCK"
-  | "ADJUSTMENT_IN"
-  | "ADJUSTMENT_OUT"
-  | "SALE";
+  "INITIAL_STOCK" | "RESTOCK" | "ADJUSTMENT_IN" | "ADJUSTMENT_OUT" | "SALE";
 
 export const MOVEMENT_LABELS: Record<MovementType, string> = {
   INITIAL_STOCK: "Initial stock",

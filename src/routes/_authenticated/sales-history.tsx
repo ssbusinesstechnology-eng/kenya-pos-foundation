@@ -172,7 +172,11 @@ function SalesHistoryPage() {
         description="Every completed sale, newest first. Open a sale to see its items and print a receipt. Sales can't be edited or deleted here."
         action={
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => void sales.refetch()} disabled={sales.isFetching}>
+            <Button
+              variant="outline"
+              onClick={() => void sales.refetch()}
+              disabled={sales.isFetching}
+            >
               <RefreshCw
                 className={`size-4 ${sales.isFetching ? "animate-spin" : ""}`}
                 aria-hidden

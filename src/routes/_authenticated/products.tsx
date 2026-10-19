@@ -39,12 +39,14 @@ export const Route = createFileRoute("/_authenticated/products")({
       { title: "Products · S&S POS" },
       {
         name: "description",
-        content: "Add, edit and manage everything your business sells — prices, stock and categories.",
+        content:
+          "Add, edit and manage everything your business sells — prices, stock and categories.",
       },
       { property: "og:title", content: "Products · S&S POS" },
       {
         property: "og:description",
-        content: "Add, edit and manage everything your business sells — prices, stock and categories.",
+        content:
+          "Add, edit and manage everything your business sells — prices, stock and categories.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -60,8 +62,7 @@ function ProductsPage() {
   const { data: account } = useAccount();
   const currency = account?.business?.currency ?? "KES";
   const defaultThreshold = account?.business?.default_low_stock_threshold ?? 5;
-  const canManage =
-    account?.profile.role === "owner" || account?.profile.role === "manager";
+  const canManage = account?.profile.role === "owner" || account?.profile.role === "manager";
 
   const products = useQuery({ queryKey: productKeys.list, queryFn: fetchProducts });
 
@@ -307,9 +308,7 @@ function ProductsPage() {
       {toggleMutation.isError ? (
         <ErrorState
           title="We couldn't change that product"
-          message={
-            toggleMutation.error instanceof Error ? toggleMutation.error.message : undefined
-          }
+          message={toggleMutation.error instanceof Error ? toggleMutation.error.message : undefined}
         />
       ) : null}
 

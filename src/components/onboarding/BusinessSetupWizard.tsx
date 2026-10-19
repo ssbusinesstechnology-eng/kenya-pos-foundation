@@ -168,12 +168,10 @@ export function BusinessSetupWizard({ account }: { account: Account }) {
                 <CheckCircle2 className="size-7 text-success" aria-hidden />
               </span>
               <div>
-                <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  You're all set
-                </h1>
+                <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">You're all set</h1>
                 <p className="mt-1.5 text-sm text-muted-foreground">
-                  {createdName || name} is ready. You're the owner, and everything you add
-                  from here stays private to your business.
+                  {createdName || name} is ready. You're the owner, and everything you add from here
+                  stays private to your business.
                 </p>
               </div>
               <Button size="lg" className="w-full" onClick={() => navigate({ to: "/dashboard" })}>

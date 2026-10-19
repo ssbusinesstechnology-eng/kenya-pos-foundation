@@ -42,8 +42,7 @@ export async function fetchAccount(): Promise<Account | null> {
   if (userError || !userData.user) return null;
 
   const user = userData.user;
-  const metadataName =
-    (user.user_metadata?.["full_name"] as string | undefined) ?? null;
+  const metadataName = (user.user_metadata?.["full_name"] as string | undefined) ?? null;
 
   const profile = await ensureProfile(metadataName);
   const business = profile.business_id ? await fetchBusiness(profile.business_id) : null;

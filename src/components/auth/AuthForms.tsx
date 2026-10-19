@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormError, FormSuccess } from "@/components/common/FormError";
-import { accountKeys, sendPasswordReset, signInWithEmail, signUpWithEmail } from "@/lib/api/account";
+import {
+  accountKeys,
+  sendPasswordReset,
+  signInWithEmail,
+  signUpWithEmail,
+} from "@/lib/api/account";
 
 function SubmitButton({ loading, children }: { loading: boolean; children: string }) {
   return (

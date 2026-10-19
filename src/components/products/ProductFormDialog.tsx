@@ -106,15 +106,14 @@ export function ProductFormDialog({
     const cost = form.cost_price.trim() === "" ? 0 : Number(form.cost_price);
     const stock = form.stock_quantity.trim() === "" ? 0 : Number(form.stock_quantity);
     const threshold =
-      form.low_stock_threshold.trim() === ""
-        ? defaultThreshold
-        : Number(form.low_stock_threshold);
+      form.low_stock_threshold.trim() === "" ? defaultThreshold : Number(form.low_stock_threshold);
 
     if (!name) next.name = "Please enter the product name.";
     if (!sku) next.sku = "Please enter a SKU or product code.";
     else if (
       existingSkus.some(
-        (existing) => existing.toLowerCase() === sku.toLowerCase() && existing !== (product?.sku ?? ""),
+        (existing) =>
+          existing.toLowerCase() === sku.toLowerCase() && existing !== (product?.sku ?? ""),
       )
     ) {
       next.sku = "Another product already uses that SKU.";

@@ -260,9 +260,7 @@ function SettingsContent({
           <div>
             <dt className="text-xs uppercase tracking-wide text-muted-foreground">Status</dt>
             <dd className="mt-1">
-              <Badge variant="outline">
-                {account.profile.is_active ? "Active" : "Inactive"}
-              </Badge>
+              <Badge variant="outline">{account.profile.is_active ? "Active" : "Inactive"}</Badge>
             </dd>
           </div>
         </dl>

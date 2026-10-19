@@ -1,7 +1,15 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Boxes, History, Package, PackageX, Search, SlidersHorizontal, TriangleAlert } from "lucide-react";
+import {
+  Boxes,
+  History,
+  Package,
+  PackageX,
+  Search,
+  SlidersHorizontal,
+  TriangleAlert,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,12 +44,14 @@ export const Route = createFileRoute("/_authenticated/inventory")({
       { title: "Inventory · S&S POS" },
       {
         name: "description",
-        content: "Manage stock levels, restocks and inventory adjustments with a full stock history.",
+        content:
+          "Manage stock levels, restocks and inventory adjustments with a full stock history.",
       },
       { property: "og:title", content: "Inventory · S&S POS" },
       {
         property: "og:description",
-        content: "Manage stock levels, restocks and inventory adjustments with a full stock history.",
+        content:
+          "Manage stock levels, restocks and inventory adjustments with a full stock history.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -73,7 +83,10 @@ function InventoryPage() {
   const canManage = account?.profile.role === "owner" || account?.profile.role === "manager";
 
   const products = useQuery({ queryKey: productKeys.list, queryFn: fetchProducts });
-  const movements = useQuery({ queryKey: inventoryKeys.movements, queryFn: () => fetchMovements() });
+  const movements = useQuery({
+    queryKey: inventoryKeys.movements,
+    queryFn: () => fetchMovements(),
+  });
   const team = useQuery({ queryKey: ["team", "names"], queryFn: fetchTeamNames });
 
   const [search, setSearch] = useState("");
@@ -117,7 +130,8 @@ function InventoryPage() {
       if (category !== "all" && (product.category?.trim() ?? "") !== category) return false;
       if (!term) return true;
       return (
-        product.name.toLowerCase().includes(term) || (product.sku ?? "").toLowerCase().includes(term)
+        product.name.toLowerCase().includes(term) ||
+        (product.sku ?? "").toLowerCase().includes(term)
       );
     });
   }, [rows, search, category, status]);
