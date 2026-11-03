@@ -1,5 +1,12 @@
 # Roadmap
 
+## Current request — morning briefing
+- [x] Scan the uploaded resume instructions and check app/email readiness.
+- [ ] Add a short Lovable AI briefing from yesterday's business activity, emailed to the requesting owner every morning. Blocked: no sender domain configured; inspect bookings/tasks sources before including them, and confirm recipient/time during setup.
+- [ ] Add secure scheduled delivery, bounded AI work, durable pause/locking/idempotency, and tests. Blocked: sender domain setup must precede email scaffolding; no schedule or AI calls created yet.
+- [ ] Verify generation and delivery without leftover test data. Blocked: email setup and implementation.
+- Keep this request small: user requested only three credits; exact spending cannot be enforced by the agent. Uploaded Phase 2D/3 work remains pending rather than starting a large build within that budget.
+
 ## Phase 2D final verification
 - [ ] A1: Browser test receipt print preview (customer sale + walk-in), Print/Save PDF, verify PDF content, no app UI in print
 - [ ] A2: Customer regression checks (create/edit, search, duplicate-phone warning, activate/deactivate, purchase history, add from POS w/o clearing cart, checkout with/without customer, inactive not selectable, edits don't break historical sales, history/details show customer)
