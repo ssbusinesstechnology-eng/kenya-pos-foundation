@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { reportPeriod, stockStatus } from "./reports";
 const now = new Date("2026-11-05T21:30:00Z");
 describe("Nairobi reporting dates",()=>{
