@@ -185,6 +185,26 @@
  * buttons are hidden, and the receipt is laid out compactly for A4 or a small
  * receipt roll.
  */
+.sale-receipt {
+  overflow-wrap: anywhere;
+}
+
+.sale-receipt dl > div,
+.sale-receipt .space-y-1 > .flex {
+  gap: 0.5rem;
+}
+
+.sale-receipt dt,
+.sale-receipt .flex > .text-muted-foreground {
+  flex-shrink: 0;
+}
+
+.sale-receipt dd,
+.sale-receipt .flex > span:last-child {
+  min-width: 0;
+  text-align: right;
+}
+
 @media screen {
   .print-root {
     display: none !important;
@@ -220,5 +240,15 @@
     color: #000;
     font-size: 11px;
     box-shadow: none !important;
+  }
+
+  .sale-receipt thead {
+    display: table-header-group;
+  }
+
+  .sale-receipt tr,
+  .sale-receipt dl,
+  .sale-receipt footer {
+    break-inside: avoid;
   }
 }

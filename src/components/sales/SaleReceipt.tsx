@@ -30,7 +30,7 @@ export function SaleReceipt({
   return (
     <div
       id={printCopy ? "receipt-print" : undefined}
-      className="mx-auto w-full max-w-sm rounded-xl border border-border bg-card p-5 text-sm"
+      className="sale-receipt mx-auto w-full max-w-sm rounded-xl border border-border bg-card p-5 text-sm"
     >
       <header className="border-b border-border pb-3 text-center">
         <h2 className="text-lg font-semibold tracking-tight">{business?.name ?? "Receipt"}</h2>
@@ -72,7 +72,13 @@ export function SaleReceipt({
         ) : null}
       </dl>
 
-      <table className="mt-4 w-full border-t border-border text-xs">
+      <table className="mt-4 w-full table-fixed border-t border-border text-xs">
+        <colgroup>
+          <col className="w-[37%]" />
+          <col className="w-[13%]" />
+          <col className="w-[25%]" />
+          <col className="w-[25%]" />
+        </colgroup>
         <thead>
           <tr className="text-left text-muted-foreground">
             <th className="py-2 font-medium">Item</th>
@@ -95,13 +101,13 @@ export function SaleReceipt({
                   </span>
                 ) : null}
               </td>
-              <td className="py-2 text-right">
+              <td className="py-2 pl-1 text-right">
                 {formatQuantity(toMilli(Number(item.quantity)))} {item.unit}
               </td>
-              <td className="py-2 text-right">
+              <td className="py-2 pl-1 text-right">
                 {formatMoneyCents(toCents(Number(item.unit_price)), currency)}
               </td>
-              <td className="py-2 text-right font-medium">
+              <td className="py-2 pl-1 text-right font-medium">
                 {formatMoneyCents(toCents(Number(item.line_subtotal)), currency)}
               </td>
             </tr>

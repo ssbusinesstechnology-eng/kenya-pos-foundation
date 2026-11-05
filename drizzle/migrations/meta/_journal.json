@@ -15,6 +15,13 @@
       "when": 1793857713733,
       "tag": "0001_report_collections_and_discounts_accuracy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793859270462,
+      "tag": "0002_protect_profile_membership_and_role",
+      "breakpoints": true
     }
   ]
 }
