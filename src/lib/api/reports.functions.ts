@@ -8,10 +8,8 @@ export const getReports = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: ReportInput) => reportInputSchema.parse(input))
   .handler(async ({ data, context }): Promise<{ overview: ReportOverview; detail: ReportPage }> => {
-    // New RPCs remain security-invoker: each table's existing RLS applies.
-    // The generated client may not yet know the additive RPC signatures.
-    const { createClient } = await import("@supabase/supabase-js");
-    const client = context.supabase as unknown as ReturnType<typeof createClient>;
+    // Security-invoker RPCs preserve each table's existing RLS.
+    const client = context.supabase;
     const [summary, detail] = await Promise.all([
       client.rpc("report_overview", { p_from: data.from, p_to: data.to, p_group: data.group }),
       data.section === "overview" || data.section === "payments"
@@ -22,7 +20,7 @@ export const getReports = createServerFn({ method: "POST" })
         }),
     ]);
     if (summary.error || detail.error) throw new Error(friendlyDataError(summary.error ?? detail.error));
-    return { overview: summary.data as ReportOverview, detail: detail.data as ReportPage };
+    return { overview: summary.data as unknown as ReportOverview, detail: detail.data as unknown as ReportPage };
   });
 
 export function reportsQueryOptions(input: ReportInput) {
