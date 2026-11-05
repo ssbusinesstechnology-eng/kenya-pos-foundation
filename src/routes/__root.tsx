@@ -79,10 +79,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "S&S Business Hub" },
-      { name: "description", content: "Sales, customers, inventory and reports for Kenyan businesses." },
+      {
+        name: "description",
+        content: "Sales, customers, inventory and reports for Kenyan businesses.",
+      },
       { name: "author", content: "S&S Tech Solutions" },
       { property: "og:title", content: "S&S Business Hub" },
-      { property: "og:description", content: "Sales, customers, inventory and reports for Kenyan businesses." },
+      {
+        property: "og:description",
+        content: "Sales, customers, inventory and reports for Kenyan businesses.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },

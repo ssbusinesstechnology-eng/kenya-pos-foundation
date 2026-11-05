@@ -11,10 +11,13 @@ import { ROLE_LABELS } from "@/lib/api/types";
 import { NAV_ITEMS } from "@/components/layout/navItems";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  loader: ({context})=>context.queryClient.ensureQueryData(dashboardReportOptions()),
-  pendingComponent: ()=><LoadingState label="Loading your dashboard…"/>,
-  errorComponent: ()=>{const router=useRouter();return <ErrorState onRetry={()=>void router.invalidate()}/>;},
-  notFoundComponent: ()=><ErrorState title="Dashboard not found"/>,
+  loader: ({ context }) => context.queryClient.ensureQueryData(dashboardReportOptions()),
+  pendingComponent: () => <LoadingState label="Loading your dashboard…" />,
+  errorComponent: () => {
+    const router = useRouter();
+    return <ErrorState onRetry={() => void router.invalidate()} />;
+  },
+  notFoundComponent: () => <ErrorState title="Dashboard not found" />,
   head: () => ({
     meta: [
       { title: "Dashboard · S&S POS" },
@@ -34,7 +37,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
 });
 
-const QUICK_LINKS = NAV_ITEMS.filter((item) => ["/sales","/products","/inventory","/customers","/sales-history","/reports"].includes(item.to));
+const QUICK_LINKS = NAV_ITEMS.filter((item) =>
+  ["/sales", "/products", "/inventory", "/customers", "/sales-history", "/reports"].includes(
+    item.to,
+  ),
+);
 
 function DashboardPage() {
   const { data: account, isPending, isError, error, refetch } = useAccount();
@@ -101,13 +108,11 @@ function DashboardPage() {
           <p className="text-sm text-muted-foreground">
             Account, business profile and private data rules are all in place.
           </p>
-          <p className="text-xs text-muted-foreground">
-            Your workspace is ready.
-          </p>
+          <p className="text-xs text-muted-foreground">Your workspace is ready.</p>
         </div>
       </div>
 
-      <DashboardSummary currency={business?.currency??"KES"}/>
+      <DashboardSummary currency={business?.currency ?? "KES"} />
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
