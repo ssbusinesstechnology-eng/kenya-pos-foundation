@@ -646,6 +646,23 @@ export type Database = {
         Returns: string
       }
       next_sale_number: { Args: { p_business_id: string }; Returns: string }
+      report_details: {
+        Args: {
+          p_category?: string
+          p_from: string
+          p_page?: number
+          p_search?: string
+          p_section: string
+          p_sort?: string
+          p_stock?: string
+          p_to: string
+        }
+        Returns: Json
+      }
+      report_overview: {
+        Args: { p_from: string; p_group?: string; p_to: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

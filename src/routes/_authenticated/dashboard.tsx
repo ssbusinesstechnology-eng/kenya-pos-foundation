@@ -1,13 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Building2, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common/StateViews";
+import { ErrorState, LoadingState, PageHeader } from "@/components/common/StateViews";
+import { DashboardSummary } from "@/components/reports/DashboardSummary";
+import { dashboardReportOptions } from "@/lib/api/reports.functions";
+import { useRouter } from "@tanstack/react-router";
 import { useAccount } from "@/lib/api/useAccount";
 import { ROLE_LABELS } from "@/lib/api/types";
 import { NAV_ITEMS } from "@/components/layout/navItems";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(dashboardReportOptions()),
+  pendingComponent: () => <LoadingState label="Loading your dashboard…" />,
+  errorComponent: function DashboardError() {
+    const router = useRouter();
+    return <ErrorState onRetry={() => void router.invalidate()} />;
+  },
+  notFoundComponent: () => <ErrorState title="Dashboard not found" />,
   head: () => ({
     meta: [
       { title: "Dashboard · S&S POS" },
@@ -27,7 +37,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
 });
 
-const UPCOMING = NAV_ITEMS.filter((item) => item.to !== "/dashboard" && item.to !== "/settings");
+const QUICK_LINKS = NAV_ITEMS.filter((item) =>
+  ["/sales", "/products", "/inventory", "/customers", "/sales-history", "/reports"].includes(
+    item.to,
+  ),
+);
 
 function DashboardPage() {
   const { data: account, isPending, isError, error, refetch } = useAccount();
@@ -94,29 +108,18 @@ function DashboardPage() {
           <p className="text-sm text-muted-foreground">
             Account, business profile and private data rules are all in place.
           </p>
-          <p className="text-xs text-muted-foreground">
-            Next up: products and sales, arriving in the coming phases.
-          </p>
+          <p className="text-xs text-muted-foreground">Your workspace is ready.</p>
         </div>
       </div>
 
-      <EmptyState
-        title="No sales yet"
-        message="Once the sales and products modules land, today's takings, top sellers and low-stock warnings will appear here — with real numbers, never guesses."
-        icon={<Sparkles className="size-5 text-primary" aria-hidden />}
-        action={
-          <Button asChild variant="outline">
-            <Link to="/settings">Review business details</Link>
-          </Button>
-        }
-      />
+      <DashboardSummary currency={business?.currency ?? "KES"} />
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          On the S&S POS roadmap
+          Your workspace
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {UPCOMING.map((item) => {
+          {QUICK_LINKS.map((item) => {
             const Icon = item.icon;
             return (
               <Link
@@ -129,7 +132,6 @@ function DashboardPage() {
                 </span>
                 <span className="min-w-0">
                   <span className="block text-sm font-medium">{item.label}</span>
-                  <span className="block text-xs text-muted-foreground">Coming soon</span>
                 </span>
               </Link>
             );
