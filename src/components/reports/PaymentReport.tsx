@@ -31,10 +31,7 @@ export function PaymentReport({ data, currency }: { data: ReportOverview; curren
           const records = data.payments.filter(
             (row) => row.method === method && row.status === "PAID",
           );
-          const cents = records.reduce(
-            (sum, row) => sum + decimalCents(row.collected),
-            0n,
-          );
+          const cents = records.reduce((sum, row) => sum + decimalCents(row.collected), 0n);
           return (
             <div key={method} className="rounded-lg border bg-card p-4">
               <Icon className="mb-3 size-4 text-primary" />
