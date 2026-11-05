@@ -24,7 +24,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Products", to: "/products", icon: Package },
   { label: "Inventory", to: "/inventory", icon: Boxes },
   { label: "Customers", to: "/customers", icon: UserSquare2 },
-  { label: "Reports", to: "/reports", icon: BarChart3 },
+  { label: "Reports & Analytics", to: "/reports", icon: BarChart3 },
   { label: "Users", to: "/users", icon: Users },
   { label: "Ask S&S", to: "/assistant", icon: Sparkles },
   { label: "Settings", to: "/settings", icon: Settings },
