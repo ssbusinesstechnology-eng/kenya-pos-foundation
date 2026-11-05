@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { queryOptions } from "@tanstack/react-query";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { reportInputSchema, type ReportInput, type ReportOverview, type ReportPage } from "@/lib/reports";
+import { reportInputSchema, reportPeriod, nairobiDay, type ReportInput, type ReportOverview, type ReportPage } from "@/lib/reports";
 import { friendlyDataError } from "@/lib/errors";
 
 export const getReports = createServerFn({ method: "POST" })
@@ -26,3 +26,13 @@ export const getReports = createServerFn({ method: "POST" })
 export function reportsQueryOptions(input: ReportInput) {
   return queryOptions({ queryKey: ["reports", input], queryFn: () => getReports({ data: input }), staleTime: 30_000 });
 }
+
+export const getDashboardReport = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const today=reportPeriod("today"); const month=reportPeriod("month");
+    const [a,b]=await Promise.all([context.supabase.rpc("report_overview",{p_from:today.from,p_to:today.to}),context.supabase.rpc("report_overview",{p_from:month.from,p_to:month.to})]);
+    if(a.error||b.error) throw new Error(friendlyDataError(a.error??b.error));
+    return {today:a.data as unknown as ReportOverview,month:b.data as unknown as ReportOverview};
+  });
+export function dashboardReportOptions() {return queryOptions({queryKey:["reports","dashboard",nairobiDay()],queryFn:()=>getDashboardReport(),staleTime:30_000});}
