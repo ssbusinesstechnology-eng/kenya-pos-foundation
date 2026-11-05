@@ -6,7 +6,7 @@ test("Two KES 120 items less KES 15 equals KES 225", () => {
 });
 
 test("Fractional quantity at an exact decimal price rounds once to cents", () => {
-  expect(lineTotalCents(toMilli(1.25), toCents(120.10))).toBe(15013);
+  expect(lineTotalCents(toMilli(1.25), toCents(120.1))).toBe(15013);
 });
 
 test("Ten percent discount on KES 240 is KES 24", () => {
