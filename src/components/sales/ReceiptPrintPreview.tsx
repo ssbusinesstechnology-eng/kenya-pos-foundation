@@ -28,15 +28,15 @@ export function ReceiptPrintPreview({
       className="no-print pointer-events-auto fixed inset-0 z-[100] flex flex-col bg-muted"
       onKeyDown={(e) => e.key === "Escape" && onClose()}
     >
-      <div className="flex items-center justify-between gap-2 border-b border-border bg-background px-4 py-3">
-        <div>
+      <div className="flex shrink-0 flex-col gap-3 border-b border-border bg-background px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <p className="font-semibold">Print preview</p>
           <p className="text-xs text-muted-foreground">
             This is how your receipt will print. Choose "Save as PDF" in the print window to keep a
             copy.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2">
           <Button variant="outline" onClick={onClose}>
             <X className="size-4" aria-hidden />
             Close

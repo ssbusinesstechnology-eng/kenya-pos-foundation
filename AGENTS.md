@@ -12,3 +12,4 @@
 - Reports use read-only security-invoker PostgreSQL RPCs through authenticated server functions; existing table RLS remains authoritative and no tenant ID is accepted.
 - Reporting periods use shared Nairobi boundaries and URL filters; monetary aggregation stays in PostgreSQL numeric and returns decimal strings to prevent browser rounding drift.
 - Report detail tables are paginated in the database; historical product figures use sale-item snapshots, while inventory fields are explicitly current.
+- Receipt views share a fixed-column wrapping layout and a separate print-root copy; this keeps long names inside the paper and prevents app controls reaching PDFs.
