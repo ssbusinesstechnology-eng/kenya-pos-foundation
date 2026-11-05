@@ -1,6 +1,12 @@
 # Roadmap
 
-## Current request — morning briefing
+## Current request — Phase 3 Reports & Analytics
+- [ ] Implement read-only aggregated reports and paginated detail tables from existing data.
+- [ ] Verify Nairobi date boundaries, calculation rules and tenant/role isolation with rollback-only tests.
+- [ ] Verify signed-in reports, receipt preview and responsive states; document unverified regression checks.
+- [ ] Stop after Phase 3; leave morning email setup pending.
+
+## Pending request — morning briefing
 - [x] Scan the uploaded resume instructions and check app/email readiness.
 - [ ] Add a short Lovable AI briefing from yesterday's business activity, emailed to the requesting owner every morning. Blocked: no sender domain configured; inspect bookings/tasks sources before including them, and confirm recipient/time during setup.
 - [ ] Add secure scheduled delivery, bounded AI work, durable pause/locking/idempotency, and tests. Blocked: sender domain setup must precede email scaffolding; no schedule or AI calls created yet.
