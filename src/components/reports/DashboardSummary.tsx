@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { dashboardReportOptions } from "@/lib/api/reports.functions";
 import { reportSearchSchema } from "@/lib/reports";
-import { reportMoney } from "./ReportMetrics";
+import { reportMoney } from "@/lib/reports";
 export function DashboardSummary({ currency }: { currency: string }) {
   const { data } = useSuspenseQuery(dashboardReportOptions());
   return (

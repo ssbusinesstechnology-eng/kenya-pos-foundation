@@ -18,7 +18,6 @@ import {
   ReportMetrics,
   InventoryMetrics,
   CustomerMetrics,
-  reportMoney,
 } from "@/components/reports/ReportMetrics";
 import { ReportCharts } from "@/components/reports/ReportCharts";
 import { ReportTable } from "@/components/reports/ReportTable";
@@ -33,6 +32,7 @@ import {
   STOCK_LABELS,
   nairobiDay,
   reportPeriod,
+  reportMoney,
   reportSearchSchema,
   type ReportSearch,
   type ReportSection,
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/_authenticated/reports")({
   loader: ({ context, deps }) => context.queryClient.ensureQueryData(options(deps)),
   pendingMs: 100,
   pendingComponent: () => <LoadingState label="Loading reports…" />,
-  errorComponent: () => {
+  errorComponent: function ReportsError() {
     const router = useRouter();
     return (
       <ErrorState

@@ -13,7 +13,7 @@ import { NAV_ITEMS } from "@/components/layout/navItems";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   loader: ({ context }) => context.queryClient.ensureQueryData(dashboardReportOptions()),
   pendingComponent: () => <LoadingState label="Loading your dashboard…" />,
-  errorComponent: () => {
+  errorComponent: function DashboardError() {
     const router = useRouter();
     return <ErrorState onRetry={() => void router.invalidate()} />;
   },

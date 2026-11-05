@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/table";
 import { PAYMENT_METHOD_LABELS, type PaymentMethod } from "@/lib/api/types";
 import { EmptyState } from "@/components/common/StateViews";
-import { reportMoney } from "./ReportMetrics";
-import type { ReportOverview } from "@/lib/reports";
+import { reportMoney, decimalCents, centsDecimal, type ReportOverview } from "@/lib/reports";
 export function PaymentReport({ data, currency }: { data: ReportOverview; currency: string }) {
   const methods = [
     { method: "CASH", Icon: Banknote },
@@ -33,8 +32,8 @@ export function PaymentReport({ data, currency }: { data: ReportOverview; curren
             (row) => row.method === method && row.status === "PAID",
           );
           const cents = records.reduce(
-            (sum, row) => sum + Math.round(Number(row.collected) * 100),
-            0,
+            (sum, row) => sum + decimalCents(row.collected),
+            0n,
           );
           return (
             <div key={method} className="rounded-lg border bg-card p-4">
@@ -43,7 +42,7 @@ export function PaymentReport({ data, currency }: { data: ReportOverview; curren
                 {PAYMENT_METHOD_LABELS[method as PaymentMethod]}
               </p>
               <p className="mt-1 text-xl font-semibold tabular-nums">
-                {reportMoney(cents / 100, currency)}
+                {reportMoney(centsDecimal(cents), currency)}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
                 {records.reduce((sum, row) => sum + row.count, 0)} successful payments

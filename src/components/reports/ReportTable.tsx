@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/common/StateViews";
 import { STOCK_LABELS, type ReportPage, type ReportRow, type ReportSection } from "@/lib/reports";
 import { MOVEMENT_LABELS, type MovementType } from "@/lib/api/types";
-import { reportMoney } from "./ReportMetrics";
+import { reportMoney } from "@/lib/reports";
 
 const columns: Record<string, [string, string][]> = {
   top: [

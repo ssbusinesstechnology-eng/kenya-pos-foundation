@@ -1,10 +1,5 @@
 import { Banknote, Receipt, TrendingUp, Package, Users, Wallet } from "lucide-react";
-import { formatMoneyCents, toCents } from "@/lib/money";
-import type { ReportOverview } from "@/lib/reports";
-
-export function reportMoney(value: unknown, currency = "KES") {
-  return formatMoneyCents(toCents(Number(value ?? 0)), currency);
-}
+import { reportMoney, type ReportOverview } from "@/lib/reports";
 export function ReportMetrics({
   data,
   currency = "KES",

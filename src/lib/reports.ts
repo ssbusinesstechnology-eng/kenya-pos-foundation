@@ -1,5 +1,18 @@
 import { z } from "zod";
 
+/** Decimal strings remain exact even when aggregate totals exceed safe JS cents. */
+export function reportMoney(value: unknown, currency = "KES") {
+  const text=String(value??0);
+  const [whole="0",fraction=""]=text.split(".");
+  if (!/^-?\d+$/.test(whole)) return `${currency} 0.00`;
+  return `${currency} ${BigInt(whole).toLocaleString("en-KE")}.${fraction.padEnd(2,"0").slice(0,2)}`;
+}
+export function decimalCents(value: string) {
+  const [whole="0",fraction=""]=value.split(".");
+  return BigInt(whole)*100n+BigInt(fraction.padEnd(2,"0").slice(0,2));
+}
+export function centsDecimal(cents: bigint) {return `${cents/100n}.${(cents%100n).toString().padStart(2,"0")}`;}
+
 export const REPORT_RANGES = [
   "today",
   "yesterday",

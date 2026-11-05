@@ -3,7 +3,7 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from "rec
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmptyState } from "@/components/common/StateViews";
-import { reportMoney } from "./ReportMetrics";
+import { reportMoney } from "@/lib/reports";
 import type { ReportOverview } from "@/lib/reports";
 const config = {
   revenue: { label: "Revenue", color: "var(--chart-1)" },

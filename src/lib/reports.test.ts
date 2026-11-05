@@ -1,6 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { reportPeriod, stockStatus } from "./reports";
+import { reportPeriod, stockStatus, reportMoney, decimalCents, centsDecimal } from "./reports";
 const now = new Date("2026-11-05T21:30:00Z");
+test("Exact decimal aggregate displays without float rounding",()=>expect(reportMoney("3500.00")).toBe("KES 3,500.00"));
+test("Payment sums use exact cents",()=>expect(centsDecimal(decimalCents("1000.10")+decimalCents("2000.20")+decimalCents("500.30"))).toBe("3500.60"));
 describe("Nairobi reporting dates", () => {
   test("Today switches at Nairobi midnight, not UTC midnight", () =>
     expect(reportPeriod("today", "", "", now)).toEqual({
