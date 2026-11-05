@@ -99,6 +99,19 @@ BEGIN
   SELECT count(*) INTO n FROM public.profiles WHERE business_id = 'aaaaaaaa-0000-0000-0000-000000000001';
   IF n <> 3 THEN RAISE EXCEPTION 'FAIL: owner A should see all 3 team profiles (saw %)', n; END IF;
 
+  -- Profile self-edit must never change the security anchors.
+  BEGIN
+    UPDATE public.profiles SET business_id = 'bbbbbbbb-0000-0000-0000-000000000001' WHERE id = auth.uid();
+    RAISE EXCEPTION 'FAIL: caller changed own tenant';
+  EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+  BEGIN
+    UPDATE public.profiles SET role = 'manager' WHERE id = auth.uid();
+    RAISE EXCEPTION 'FAIL: caller changed own role';
+  EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+  UPDATE public.profiles SET full_name = 'Owner A edited' WHERE id = auth.uid();
+  GET DIAGNOSTICS n = ROW_COUNT;
+  IF n <> 1 THEN RAISE EXCEPTION 'FAIL: full name self-edit lost'; END IF;
+
   -- Nothing can be deleted
   DELETE FROM public.customers WHERE id = 'aaaaaaaa-0000-0000-0000-0000000000c1';
   GET DIAGNOSTICS n = ROW_COUNT;
@@ -124,6 +137,10 @@ BEGIN
   IF n <> 0 THEN RAISE EXCEPTION 'FAIL: manager edited business settings (owner only)'; END IF;
   SELECT count(*) INTO n FROM public.profiles;
   IF n <> 1 THEN RAISE EXCEPTION 'FAIL: manager should only see own profile (saw %)', n; END IF;
+  BEGIN
+    UPDATE public.profiles SET role = 'owner' WHERE id = auth.uid();
+    RAISE EXCEPTION 'FAIL: manager promoted self';
+  EXCEPTION WHEN insufficient_privilege THEN NULL; END;
 END $$;
 RESET ROLE;
 
@@ -145,6 +162,10 @@ BEGIN
   END;
   SELECT count(*) INTO n FROM public.customers WHERE business_id = 'bbbbbbbb-0000-0000-0000-000000000001';
   IF n <> 0 THEN RAISE EXCEPTION 'FAIL: cashier sees business B customers'; END IF;
+  BEGIN
+    UPDATE public.profiles SET role = 'owner' WHERE id = auth.uid();
+    RAISE EXCEPTION 'FAIL: cashier promoted self';
+  EXCEPTION WHEN insufficient_privilege THEN NULL; END;
 END $$;
 RESET ROLE;
 
