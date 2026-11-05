@@ -1,5 +1,13 @@
 # Roadmap
 
+## Current request — final QA and stabilisation
+- [ ] Inspect existing changes/schema/tests without discarding work.
+- [ ] Customer add/edit/persistence/search/duplicate/inactivity/history and POS cart-preservation regression.
+- [ ] Four payment methods, exact totals/validation/stock/payment/movement readback and sales history.
+- [ ] Named/walk-in on-screen receipt, preview and PDF; phone/tablet fit.
+- [ ] Fix confirmed defects only, add regression tests, verify cleanup and final app health.
+- [ ] Save evidence and explicitly label physical printing NOT VERIFIED. Do not publish.
+
 ## Phase 3 — Reports & Analytics
 - [x] Read-only Reports page, Nairobi date ranges, sales overview/trends, top sellers, product performance, inventory, movements, payments, customers and transactions.
 - [x] Database aggregation, historical snapshots, exact decimal amounts, fixed 20-row detail pages and existing RLS.
